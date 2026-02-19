@@ -11,14 +11,14 @@ import { useRouter } from 'next/navigation';
 // Schemas
 
 import * as z from 'zod';
-import { LoginSchema } from '@/schemas';
+import { LoginSchema } from '../../schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 // Components
 
-import { Input } from '@/components/ui/input';
+import { Input } from '../ui/input';
 
-import { CardWrapper } from '@/components/auth/CardWrapper';
+import { CardWrapper } from './CardWrapper';
 
 import {
 	Form,
@@ -27,13 +27,13 @@ import {
 	FormMessage,
 	FormItem,
 	FormLabel,
-} from '@/components/ui/form';
+} from '../ui/form';
 
-import { Button } from '@/components/ui/button';
-import FormError from '@/components/FormError';
-import FormSuccess from '@/components/FormSuccess';
+import { Button } from '../ui/button';
+import FormError from '../FormError';
+import FormSuccess from '../FormSuccess';
 
-import { AUTH_MESSAGES } from '@/constants/messages';
+import { AUTH_MESSAGES } from '../../constants/messages';
 
 export default function LoginForm() {
 	const [error, setError] = useState<string | undefined>();

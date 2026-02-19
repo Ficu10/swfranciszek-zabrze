@@ -1,5 +1,5 @@
 import { auth } from '@/auth/auth';
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '../constants/roles';
 
 export type AuthorizedUser = {
   id: string;

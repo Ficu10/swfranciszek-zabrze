@@ -2,8 +2,8 @@
 import { auth } from '@/auth/auth';
 
 // Components
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
-import AddUserForm from '@/components/auth/AddUserForm';
+import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
+import AddUserForm from '../../../components/auth/AddUserForm';
 
 export default async function addUser() {
 	const session = await auth();

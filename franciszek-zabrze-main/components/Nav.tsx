@@ -18,19 +18,19 @@ import {
 	NavigationMenuLink,
 	NavigationMenuList,
 	NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
+} from './ui/navigation-menu';
 
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from '@/components/ui/popover';
+} from './ui/popover';
 
-import MenuItem from '@/components/MenuItem';
+import MenuItem from './MenuItem';
 
-import ListWithToggle from '@/components/ListWithToggle';
+import ListWithToggle from './ListWithToggle';
 
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 
 // Icons
 

@@ -1,4 +1,4 @@
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '../constants/roles';
 import type { Session } from 'next-auth';
 
 export const hasRequiredRole = (

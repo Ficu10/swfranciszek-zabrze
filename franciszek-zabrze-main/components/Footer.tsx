@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import findFooterData from '@/actions/findFooterData';
 import saveFooterData from '@/actions/saveFooterData';
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import MaxWidthWrapper from './MaxWidthWrapper';
 import { FaLocationDot } from 'react-icons/fa6';
 import { FaPhone, FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { HiMiniBuildingOffice } from 'react-icons/hi2';

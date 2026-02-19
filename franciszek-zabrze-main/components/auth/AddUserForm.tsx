@@ -8,12 +8,12 @@ import { addUser } from '@/actions/addUser';
 
 // Schemas
 import * as z from 'zod';
-import { RegisterSchema } from '@/schemas';
+import { RegisterSchema } from '../../schemas';
 
 // Components
-import { CardWrapper } from '@/components/auth/CardWrapper';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+import { CardWrapper } from './CardWrapper';
+import { Input } from '../ui/input';
+import { Checkbox } from '../ui/checkbox';
 import {
 	Form,
 	FormControl,
@@ -21,10 +21,10 @@ import {
 	FormMessage,
 	FormItem,
 	FormLabel,
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import FormError from '@/components/FormError';
-import FormSuccess from '@/components/FormSuccess';
+} from '../ui/form';
+import { Button } from '../ui/button';
+import FormError from '../FormError';
+import FormSuccess from '../FormSuccess';
 
 const roles = [
 	'admin',

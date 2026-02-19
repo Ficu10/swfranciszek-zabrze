@@ -14,11 +14,11 @@ import findPostById from '@/actions/findPostById';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type * as z from 'zod';
-import { PostSchema } from '@/schemas';
+import { PostSchema } from '../../../schemas';
 
 // Components
 
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
 
 import {
 	Form,
@@ -27,7 +27,7 @@ import {
 	FormMessage,
 	FormItem,
 	FormLabel,
-} from '@/components/ui/form';
+} from '../../../components/ui/form';
 
 import {
 	Select,
@@ -35,18 +35,18 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/components/ui/select';
+} from '../../../components/ui/select';
 
 import dynamic from 'next/dynamic';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
-import FormError from '@/components/FormError';
-import FormSuccess from '@/components/FormSuccess';
+import FormError from '../../../components/FormError';
+import FormSuccess from '../../../components/FormSuccess';
 
-import { Input } from '@/components/ui/input';
+import { Input } from '../../../components/ui/input';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../components/ui/button';
 
 export default function EditPostForm() {
 	const [isPending, startTransition] = useTransition();

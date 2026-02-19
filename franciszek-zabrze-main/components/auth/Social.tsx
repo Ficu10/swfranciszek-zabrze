@@ -7,7 +7,7 @@ import { FaFacebookF } from 'react-icons/fa';
 
 // Components
 
-import { Button } from '@/components/ui/button';
+import { Button } from '../ui/button';
 
 // Social component if ever needed
 const Social = () => {

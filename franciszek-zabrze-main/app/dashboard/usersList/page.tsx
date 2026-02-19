@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation';
 
 // Components
 
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
 
 import {
 	AlertDialog,
@@ -23,9 +23,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '../../../components/ui/alert-dialog';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../components/ui/button';
 import {
 	Pagination,
 	PaginationContent,
@@ -34,7 +34,7 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from '@/components/ui/pagination';
+} from '../../../components/ui/pagination';
 
 // Interfaces
 

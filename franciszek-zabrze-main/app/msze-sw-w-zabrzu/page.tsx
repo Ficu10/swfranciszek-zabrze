@@ -1,5 +1,5 @@
 // Components
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import MaxWidthWrapper from '../../components/MaxWidthWrapper';
 
 import {
 	Table,
@@ -8,9 +8,9 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from '@/components/ui/table';
+} from '../../components/ui/table';
 
-import msze from '@/constants/msze';
+import msze from '../../constants/msze';
 
 export default function mszeSwWZabrzu() {
 	return (

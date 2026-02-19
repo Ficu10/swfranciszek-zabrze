@@ -13,7 +13,7 @@ import { db } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 import { DefaultSession } from 'next-auth';
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '../constants/roles';
 
 declare module 'next-auth' {
 	interface User {

@@ -7,13 +7,13 @@ import {
 	CardHeader,
 	CardFooter,
 	CardContent,
-} from '@/components/ui/card';
+} from '../ui/card';
 
-import { Header } from '@/components/auth/Header';
+import { Header } from './Header';
 
-import Social from '@/components/auth/Social';
+import Social from './Social';
 
-import BackButton from '@/components/auth/BackButton';
+import BackButton from './BackButton';
 
 // Interfaces
 

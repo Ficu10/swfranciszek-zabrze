@@ -2,16 +2,16 @@
 
 // Functions
 
-import { getUserByUsername } from '@/data/user';
+import { getUserByUsername } from '../data/user';
 import { auth } from '@/auth/auth';
 import { hasRequiredRole } from '@/utils/roleChecks';
-import { ROLES } from '@/constants/roles';
-import { AUTH_MESSAGES } from '@/constants/messages';
+import { ROLES } from '../constants/roles';
+import { AUTH_MESSAGES } from '../constants/messages';
 
 // Schemas
 
 import type * as z from 'zod';
-import { RegisterSchema } from '@/schemas';
+import { RegisterSchema } from '../schemas';
 
 // Cryptography
 

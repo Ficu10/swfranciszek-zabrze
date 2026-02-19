@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 // Components
 
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
 import Image from 'next/image';
 
 import {
@@ -20,7 +20,7 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from '@/components/ui/pagination';
+} from '../../../components/ui/pagination';
 
 import {
 	AlertDialog,
@@ -32,9 +32,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '../../../components/ui/alert-dialog';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../components/ui/button';
 
 // Icons
 

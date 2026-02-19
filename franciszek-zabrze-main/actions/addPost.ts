@@ -7,16 +7,13 @@ import { auth } from '@/auth/auth';
 // Schemas
 
 import * as z from 'zod';
-import { PostSchema } from '@/schemas';
+import { PostSchema } from '../schemas';
 
 // Database
 
 import { db } from '@/lib/db';
 
-export const editPost = async (
-	id: string,
-	values: z.infer<typeof PostSchema>
-) => {
+export const addPost = async (values: z.infer<typeof PostSchema>) => {
 	// Validating values with zod and PostSchema in schemas folder
 	const validatedFields = PostSchema.safeParse(values);
 
@@ -32,9 +29,10 @@ export const editPost = async (
 		!session?.user?.role?.includes('admin')
 	) {
 		return {
-			error: 'Nie masz permisji do edytowania postów',
+			error: 'Nie masz permisji do dodawania postów',
 		};
 	}
+
 	const firstname = session?.user?.firstname;
 	const lastname = session?.user?.lastname;
 
@@ -48,18 +46,16 @@ export const editPost = async (
 
 	const { content, category } = validatedFields.data;
 
+
 	try {
-		await db.post.update({
-			where: {
-				id: id,
-			},
+		await db.post.create({
 			data: {
 				content: content,
 				category: category,
 				author: `${firstname} ${lastname}`,
 			},
 		});
-		return { success: 'Poprawnie edytowano post!' };
+		return { success: 'Poprawnie dodano post!' };
 	} catch (err) {
 		return { error: 'Coś poszło nie tak' };
 	}

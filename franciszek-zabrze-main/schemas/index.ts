@@ -1,7 +1,7 @@
 // Zod
 
 import * as z from 'zod';
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '../constants/roles';
 
 const passwordSchema = z.string().min(8, 'Hasło musi mieć minimum 8 znaków');
 

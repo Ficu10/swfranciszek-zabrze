@@ -6,8 +6,8 @@ import { auth } from '@/auth/auth';
 
 import Link from 'next/link';
 
-import MaxWidthWrapper from '@/components/MaxWidthWrapper';
-import Provider from '@/components/Provider';
+import MaxWidthWrapper from '../../components/MaxWidthWrapper';
+import Provider from '../../components/Provider';
 
 export default async function DashboardLayout({
 	children,
