@@ -9,7 +9,7 @@ import { signOut } from '@/auth/helpers';
 
 // Components
 
-import AuthButton from '@/app/AuthButton.client';
+import AuthButton from '../../AuthButton.client';
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 

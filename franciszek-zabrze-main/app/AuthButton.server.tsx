@@ -5,7 +5,7 @@ import { auth } from '@/auth/auth';
 
 // Components
 
-import AuthButtonClient from '@/app/AuthButton.client';
+import AuthButtonClient from './AuthButton.client';
 
 export default async function AuthButton() {
 	const session = await auth();
