@@ -21,7 +21,8 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 		// Log all failed resources
 		const observer = new PerformanceObserver((list) => {
 			for (const entry of list.getEntries()) {
-				if (entry.transferSize === 0 && entry.name.indexOf('http') === 0) {
+				const resourceTiming = entry as PerformanceResourceTiming;
+				if (resourceTiming.transferSize === 0 && entry.name.indexOf('http') === 0) {
 					console.error('[PROVIDER] Failed to load resource:', entry.name);
 				}
 			}
