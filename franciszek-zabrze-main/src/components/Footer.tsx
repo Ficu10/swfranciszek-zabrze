@@ -32,14 +32,26 @@ const Footer = () => {
 	useEffect(() => {
 		const fetchFooterData = async () => {
 			try {
+				console.log('[FOOTER] Fetching footer data...');
 				const data = await findFooterData();
-
+				console.log('[FOOTER] Footer data fetched successfully:', data);
 				setFooterData(data);
 				setEditValues(data);
 				setLoading(false);
 			} catch (error) {
-				console.error('Error fetching footer data:', error);
+				console.error('[FOOTER] Error fetching footer data:', error);
 				setLoading(false);
+				// Set default footer data on error
+				setFooterData({
+					address: 'Address not available',
+					officeHours: 'Office hours not available',
+					contactPhone: 'Phone not available',
+					contactEmail: 'Email not available',
+					instagram: '',
+					twitter: '',
+					facebook: '',
+					youtube: '',
+				});
 			}
 		};
 
