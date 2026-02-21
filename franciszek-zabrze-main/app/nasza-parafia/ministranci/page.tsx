@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 // Components
-import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 import dynamic from 'next/dynamic';
 
@@ -14,7 +14,7 @@ const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 // Database
 import findMinistranciData from '@/actions/findMinistranciData';
 import saveMinistranciData from '@/actions/saveMinistranciData';
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 interface MinistranciProps {
 	content: string;

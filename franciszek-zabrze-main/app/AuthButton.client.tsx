@@ -7,7 +7,7 @@ import { signIn, signOut } from '@/auth/helpers';
 
 // Components
 
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export default function AuthButton() {
 	const session = useSession();

@@ -4,7 +4,7 @@
 
 import { getUserByUsername } from '../data/user';
 import { auth } from '@/auth/auth';
-import { hasRequiredRole } from '@/utils/roleChecks';
+import { hasRequiredRole } from '../utils/roleChecks';
 import { ROLES } from '../constants/roles';
 import { AUTH_MESSAGES } from '../constants/messages';
 

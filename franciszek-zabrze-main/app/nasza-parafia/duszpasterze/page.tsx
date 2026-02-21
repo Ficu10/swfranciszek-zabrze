@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 // Components
-import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 // Database
 import findDuszpasterzeData from '@/actions/findDuszpasterzeData';
 import saveDuszpasterzeData from '@/actions/saveDuszpasterzeData';
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });

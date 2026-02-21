@@ -1,6 +1,6 @@
 'use client';
 
-import LoginForm from '../../components/auth/LoginForm';
+import LoginForm from '@/components/auth/LoginForm';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';

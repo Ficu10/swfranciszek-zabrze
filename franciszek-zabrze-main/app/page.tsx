@@ -1,8 +1,8 @@
 // Components
 
-import MaxWidthWrapper from '../components/MaxWidthWrapper';
-import BackgroundImage from '../components/BackgroundImage';
-import Cards from '../components/Cards';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import BackgroundImage from '@/components/BackgroundImage';
+import Cards from '@/components/Cards';
 
 export default function Home() {
 	return (

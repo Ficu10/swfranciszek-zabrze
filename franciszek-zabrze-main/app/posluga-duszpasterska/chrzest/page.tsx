@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 // Components
-import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
-import { Button } from '../../../components/ui/button';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import { Button } from '@/components/ui/button';
 
 import dynamic from 'next/dynamic';
 

@@ -10,13 +10,13 @@ const font = Poppins({ subsets: ['latin'], weight: '400' });
 
 // Styles
 
-import '@/app/globals.css';
+import './globals.css';
 
 // Components
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Provider from '../components/Provider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Provider from '@/components/Provider';
 
 export const metadata: Metadata = {
 	title: 'Kościół św. Franciszka w Zabrzu',

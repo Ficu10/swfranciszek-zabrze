@@ -11,7 +11,7 @@ import { signOut } from '@/auth/helpers';
 
 import AuthButton from '../../AuthButton.client';
 
-import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 import {
 	AlertDialog,
@@ -23,9 +23,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '../../../components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
 
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export default function Profile() {
 	const handleDeleteUser = async (userId: string) => {

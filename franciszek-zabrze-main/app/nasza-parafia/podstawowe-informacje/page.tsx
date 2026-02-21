@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 // Components
-import MaxWidthWrapper from '../../../components/MaxWidthWrapper';
-import { SafeHTML } from '../../../components/SafeHTML';
+import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import { SafeHTML } from '@/components/SafeHTML';
 
 // Database
 import findInformacjeData from '@/actions/findInformacjeData';
 import saveInformacjeData from '@/actions/saveInformacjeData';
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
