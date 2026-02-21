@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  console.log('[MIDDLEWARE] Request:', {
+    method: request.method,
+    pathname: request.nextUrl.pathname,
+    url: request.url,
+  });
+
   const response = NextResponse.next();
 
   // Content Security Policy

@@ -42,17 +42,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		signIn: '/signIn',
 	},
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user, account }) {
+			console.log('[JWT_CALLBACK] Called', { userId: user?.id, hasAccount: !!account });
 			if (user) {
 				token.id = user.id;
 				token.username = user.username;
 				token.role = user.role;
 				token.firstname = user.firstname;
 				token.lastname = user.lastname;
+				console.log('[JWT_CALLBACK] Token updated for user:', user.username);
 			}
 			return token;
 		},
 		async session({ session, token }) {
+			console.log('[SESSION_CALLBACK] Called', { userId: token.id });
 			if (token) {
 				session.user.id = token.id as string;
 				session.user.username = token.username as string;
@@ -61,6 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				>;
 				session.user.firstname = token.firstname as string | null;
 				session.user.lastname = token.lastname as string | null;
+				console.log('[SESSION_CALLBACK] Session updated for user:', token.username);
 			}
 			return session;
 		},
@@ -76,7 +80,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				req: Request
 			): Promise<User | null> {
 				try {
+					console.log('[AUTHORIZE] Starting authorization for:', credentials?.username);
 					if (!credentials?.username || !credentials.password) {
+						console.log('[AUTHORIZE] Missing credentials');
 						return null;
 					}
 
@@ -86,7 +92,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 						},
 					});
 
-					if (!user || !user.password) {
+					if (!user) {
+						console.log('[AUTHORIZE] User not found:', credentials.username);
+						return null;
+					}
+
+					if (!user.password) {
+						console.log('[AUTHORIZE] User has no password:', credentials.username);
 						return null;
 					}
 
@@ -96,9 +108,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					);
 
 					if (!passwordsMatch) {
+						console.log('[AUTHORIZE] Password mismatch for user:', credentials.username);
 						return null;
 					}
 
+					console.log('[AUTHORIZE] Authorization successful for:', user.username);
 					return {
 						id: user.id,
 						username: user.username,
@@ -108,7 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 						email: user.email || undefined,
 					};
 				} catch (error) {
-					console.error('Authentication error occurred');
+					console.error('[AUTHORIZE] Authentication error:', error);
 					return null;
 				}
 			},

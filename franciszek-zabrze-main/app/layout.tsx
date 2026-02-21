@@ -3,6 +3,8 @@
 import type { Metadata } from 'next';
 import { cn } from '@/lib/utils';
 
+console.log('[LAYOUT] Root layout loading...');
+
 // Fonts
 
 import { Poppins } from 'next/font/google';
@@ -28,6 +30,7 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	console.log('[LAYOUT] RootLayout rendering');
 	return (
 		<html lang="en">
 			<body
