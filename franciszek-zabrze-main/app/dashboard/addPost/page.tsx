@@ -11,7 +11,7 @@ import { addPost } from '@/actions/addPost';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { PostSchema } from '../../../schemas';
+import { PostSchema } from '@/schemas';
 
 // Components
 

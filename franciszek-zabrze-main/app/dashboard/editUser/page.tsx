@@ -11,7 +11,7 @@ import { editUser } from '@/actions/editUser';
 
 // Schemas
 import * as z from 'zod';
-import { RegisterSchema } from '../../../schemas';
+import { RegisterSchema } from '@/schemas';
 
 // Components
 import { CardWrapper } from '@/components/auth/CardWrapper';

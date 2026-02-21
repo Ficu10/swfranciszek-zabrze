@@ -14,7 +14,7 @@ import findPostById from '@/actions/findPostById';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type * as z from 'zod';
-import { PostSchema } from '../../../schemas';
+import { PostSchema } from '@/schemas';
 
 // Components
 
