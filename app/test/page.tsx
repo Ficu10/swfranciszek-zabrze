@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function TestPage() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
@@ -11,8 +13,8 @@ export default function TestPage() {
         <li>Static routes: ✅ WORKING</li>
         <li>Check API endpoints: 
           <ul>
-            <li><a href="/api/health">/api/health</a></li>
-            <li><a href="/api/diagnostics">/api/diagnostics</a></li>
+            <li><Link href="/api/health">/api/health</Link></li>
+            <li><Link href="/api/diagnostics">/api/diagnostics</Link></li>
           </ul>
         </li>
       </ul>
