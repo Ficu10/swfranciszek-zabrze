@@ -11,9 +11,12 @@ export default async function AuthButton() {
 	let session = null;
 	
 	try {
+		console.log('[AuthButton] Calling auth()...');
 		session = await auth();
+		console.log('[AuthButton] Auth success, session:', !!session);
 		
 		if (session && session.user) {
+			console.log('[AuthButton] Processing user:', session.user.username);
 			session.user = {
 				id: session.user.id,
 				username: session.user.username,
@@ -23,11 +26,12 @@ export default async function AuthButton() {
 			};
 		}
 	} catch (error) {
-		console.error('Error fetching auth session:', error);
+		console.error('[AuthButton] Error fetching auth session:', error);
 		// Continue without session if auth fails
 		session = null;
 	}
 
+	console.log('[AuthButton] Rendering with session:', !!session);
 	return (
 		<SessionProvider session={session}>
 			<AuthButtonClient />
