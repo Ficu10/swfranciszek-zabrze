@@ -16,7 +16,6 @@ interface ProviderProps {
 
 const Provider: FC<ProviderProps> = ({ children }) => {
 	useEffect(() => {
-		console.log('[PROVIDER] Client-side provider mounted');
 		
 		// Log all failed resources
 		const observer = new PerformanceObserver((list) => {
@@ -33,7 +32,6 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 		return () => observer.disconnect();
 	}, []);
 
-	console.log('[PROVIDER] Rendering SessionProvider');
 	return <SessionProvider>{children}</SessionProvider>;
 };
 
