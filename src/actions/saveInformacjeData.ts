@@ -2,7 +2,7 @@
 
 import { db } from '@/lib/db';
 import { requireAdmin, createErrorResponse, createSuccessResponse } from '@/lib/auth-utils';
-import { sanitizeHtml } from '@/lib/sanitize';
+import { sanitizeHtml } from '@/lib/sanitize-server';
 
 interface InformacjeProps {
 	content: string;
@@ -14,7 +14,7 @@ const saveInformacjeData = async (data: InformacjeProps) => {
 		await requireAdmin();
 
 		// Sanitize HTML content to prevent XSS
-		const sanitizedContent = sanitizeHtml(data.content);
+		const sanitizedContent = await sanitizeHtml(data.content);
 
 		await db.informacje.update({
 			where: { id: '1' },
