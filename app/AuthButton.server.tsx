@@ -8,16 +8,24 @@ import { auth } from '@/auth/auth';
 import AuthButtonClient from './AuthButton.client';
 
 export default async function AuthButton() {
-	const session = await auth();
-
-	if (session && session.user) {
-		session.user = {
-			id: session.user.id,
-			username: session.user.username,
-			role: session.user.role,
-			firstname: session.user.firstname,
-			lastname: session.user.lastname,
-		};
+	let session = null;
+	
+	try {
+		session = await auth();
+		
+		if (session && session.user) {
+			session.user = {
+				id: session.user.id,
+				username: session.user.username,
+				role: session.user.role,
+				firstname: session.user.firstname,
+				lastname: session.user.lastname,
+			};
+		}
+	} catch (error) {
+		console.error('Error fetching auth session:', error);
+		// Continue without session if auth fails
+		session = null;
 	}
 
 	return (
