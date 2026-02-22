@@ -21,6 +21,9 @@ import Provider from '@/components/Provider';
 export const metadata: Metadata = {
 	title: 'Kościół św. Franciszka w Zabrzu',
 	description: 'Kościół św. Franciszka w Zabrzu',
+	icons: {
+		icon: '/favicon.svg',
+	},
 };
 
 export default function RootLayout({
