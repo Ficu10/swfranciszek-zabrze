@@ -5,7 +5,8 @@ import { cn } from '@/lib/utils';
 
 console.log('[LAYOUT] Initializing root layout...');
 
-// Fonts
+// Force dynamic rendering for entire app
+export const dynamic = 'force-dynamic';
 
 import { Poppins } from 'next/font/google';
 const font = Poppins({ subsets: ['latin'], weight: '400' });
