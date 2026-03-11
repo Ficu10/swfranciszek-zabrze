@@ -64,6 +64,9 @@ export const EditUserSchema = z
 	});
 
 export const PostSchema = z.object({
+	title: z.string().min(3, {
+		message: 'Nagłówek musi mieć minimum 3 znaki',
+	}),
 	content: z.string().min(10, {
 		message: 'Treść musi mieć minimum 10 znaków',
 	}),

@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useTransition, useState } from 'react';
+import { useTransition, useState, type ChangeEvent } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import * as z from 'zod';
@@ -28,11 +28,13 @@ import {
 import FormError from '@/components/FormError';
 import FormSuccess from '@/components/FormSuccess';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 export default function AddPostForm() {
 	const [isPending, startTransition] = useTransition();
+	const [isUploading, setIsUploading] = useState(false);
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const { data } = useSession();
@@ -40,10 +42,49 @@ export default function AddPostForm() {
 	const form = useForm<z.infer<typeof PostSchema>>({
 		resolver: zodResolver(PostSchema),
 		defaultValues: {
+			title: '',
 			content: '',
 			author: `${data?.user.firstname ?? ''} ${data?.user.lastname ?? ''}`.trim(),
 		},
 	});
+
+	const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file) {
+			return;
+		}
+
+		setIsUploading(true);
+		setError('');
+
+		try {
+			const formData = new FormData();
+			formData.append('image', file);
+
+			const response = await fetch('/api/upload-image', {
+				method: 'POST',
+				body: formData,
+			});
+
+			const payload = await response.json();
+
+			if (!response.ok || !payload.url) {
+				setError(payload.error ?? 'Nie udało się przesłać zdjęcia');
+				return;
+			}
+
+			const currentContent = form.getValues('content') || '';
+			form.setValue(
+				'content',
+				`${currentContent}<p><img src="${payload.url}" alt="Obraz" /></p>`
+			);
+		} catch (uploadError) {
+			setError('Nie udało się przesłać zdjęcia');
+		} finally {
+			setIsUploading(false);
+			event.target.value = '';
+		}
+	};
 
 	const onSubmit = async (values: z.infer<typeof PostSchema>) => {
 		setError('');
@@ -70,6 +111,24 @@ export default function AddPostForm() {
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 							<div className="flex flex-col gap-y-6">
+								<FormField
+									control={form.control}
+									name="title"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Nagłówek posta</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Np. Ogłoszenia na najbliższą niedzielę"
+													{...field}
+													disabled={isPending || isUploading}
+													type="text"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<div className="flex flex-row gap-x-1 justify-center items-center">
 									<FormField
 										control={form.control}
@@ -101,20 +160,23 @@ export default function AddPostForm() {
 								</div>
 								<div className="flex flex-col gap-y-4">
 									<p className="text-sm">
-										Jak podać link do zdjęcia? <br />
-										Wejdź na stronę taką jak np:{' '}
-										<a href="https://postimages.org/" className="text-indigo-500">
-											https://postimages.org/
-										</a>
-										<br />
-										Następnie prześlij tam swoje zdjęcie <br />
-										Potem dostaniesz link do swojego zdjęcia.{' '}
-										<strong>(Direct link)</strong> <br />
+										Wgraj zdjęcie bezpośrednio do Google Drive, a system automatycznie
+										doda je do treści posta.
 									</p>
-									<p className="tex-sm font-semibold">
-										W edytorze tekstu kliknij w trzy kropki, następnie obrazek,
-										następnie wklej tam ten link.
-									</p>
+									<div>
+										<label className="text-sm font-medium">Dodaj zdjęcie</label>
+										<Input
+											type="file"
+											accept="image/png,image/jpeg,image/webp,image/gif"
+											onChange={handleImageUpload}
+											disabled={isUploading || isPending}
+										/>
+										{isUploading && (
+											<p className="text-sm text-muted-foreground mt-1">
+												Wgrywam zdjęcie do Google Drive...
+											</p>
+										)}
+									</div>
 								</div>
 								<div className="dangerouslySetInnerHTML">
 									<FormField
@@ -134,7 +196,11 @@ export default function AddPostForm() {
 							{error !== undefined && <FormError message={error} />}
 							{success !== undefined && <FormSuccess message={success} />}
 
-							<Button type="submit" className="w-full mt-12" disabled={isPending}>
+							<Button
+								type="submit"
+								className="w-full mt-12"
+								disabled={isPending || isUploading}
+							>
 								Dodaj post
 							</Button>
 						</form>

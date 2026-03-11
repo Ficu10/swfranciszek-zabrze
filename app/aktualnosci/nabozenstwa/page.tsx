@@ -7,11 +7,11 @@ import deletePost from '@/actions/deletePost';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 // Components
 
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
-import Image from 'next/image';
 
 import {
 	Pagination,
@@ -40,9 +40,12 @@ import { Button } from '@/components/ui/button';
 
 import { IoPerson } from 'react-icons/io5';
 import { FaCalendar } from 'react-icons/fa';
+import { stripHtml } from '@/lib/html';
 
 interface Post {
 	id: string;
+	title: string;
+	slug: string;
 	author: string;
 	createdAt: Date;
 	content: string;
@@ -85,9 +88,6 @@ const Nabozenstwa = () => {
 	const handleEditPost = (postId: string) => {
 		router.push(`/dashboard/editPost?postId=${postId}`);
 	};
-
-	// Regex for content validation
-	const isHTML = (str: string) => /<[a-z][\s\S]*>/i.test(str);
 
 	// Get current posts
 	const indexOfLastPost = currentPage * postsPerPage;
@@ -138,15 +138,13 @@ const Nabozenstwa = () => {
 											.slice(0, 10)
 											.replace(',', '')}
 									</p>
-
-									{isHTML(post.content) ? (
-										<div
-											className="dangerouslySetInnerHTML"
-											dangerouslySetInnerHTML={{ __html: post.content }}
-										/>
-									) : (
-										<p>{post.content}</p>
-									)}
+									<Link
+										href={`/aktualnosci/${post.slug}`}
+										className="text-2xl font-semibold mt-2 hover:underline"
+									>
+										{post.title}
+									</Link>
+									<p className="mt-3 text-gray-700">{stripHtml(post.content).slice(0, 260)}...</p>
 									{hasRole && (
 										<div className="flex gap-x-2 w-full py-5">
 											<AlertDialog>

@@ -12,6 +12,28 @@ import { PostSchema } from '../schemas';
 // Database
 
 import { db } from '@/lib/db';
+import { slugify } from '@/lib/slug';
+
+const generateUniqueSlug = async (
+	title: string,
+	currentPostId: string
+): Promise<string> => {
+	const baseSlug = slugify(title);
+	const safeBaseSlug = baseSlug || `post-${Date.now()}`;
+	let candidate = safeBaseSlug;
+	let counter = 1;
+
+	while (true) {
+		const postWithSameSlug = await db.post.findUnique({ where: { slug: candidate } });
+
+		if (!postWithSameSlug || postWithSameSlug.id === currentPostId) {
+			return candidate;
+		}
+
+		candidate = `${safeBaseSlug}-${counter}`;
+		counter += 1;
+	}
+};
 
 export const editPost = async (
 	id: string,
@@ -46,7 +68,8 @@ export const editPost = async (
 		};
 	}
 
-	const { content, category } = validatedFields.data;
+	const { title, content, category } = validatedFields.data;
+	const slug = await generateUniqueSlug(title, id);
 
 	try {
 		await db.post.update({
@@ -54,6 +77,8 @@ export const editPost = async (
 				id: id,
 			},
 			data: {
+				title,
+				slug,
 				content: content,
 				category: category,
 				author: `${firstname} ${lastname}`,

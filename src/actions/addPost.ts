@@ -12,6 +12,21 @@ import { PostSchema } from '../schemas';
 // Database
 
 import { db } from '@/lib/db';
+import { slugify } from '@/lib/slug';
+
+const generateUniqueSlug = async (title: string): Promise<string> => {
+	const baseSlug = slugify(title);
+	const safeBaseSlug = baseSlug || `post-${Date.now()}`;
+	let candidate = safeBaseSlug;
+	let counter = 1;
+
+	while (await db.post.findUnique({ where: { slug: candidate } })) {
+		candidate = `${safeBaseSlug}-${counter}`;
+		counter += 1;
+	}
+
+	return candidate;
+};
 
 export const addPost = async (values: z.infer<typeof PostSchema>) => {
 	// Validating values with zod and PostSchema in schemas folder
@@ -44,12 +59,15 @@ export const addPost = async (values: z.infer<typeof PostSchema>) => {
 		};
 	}
 
-	const { content, category } = validatedFields.data;
+	const { title, content, category } = validatedFields.data;
+	const slug = await generateUniqueSlug(title);
 
 
 	try {
 		await db.post.create({
 			data: {
+				title,
+				slug,
 				content: content,
 				category: category,
 				author: `${firstname} ${lastname}`,

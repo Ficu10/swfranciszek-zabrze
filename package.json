@@ -28,6 +28,7 @@
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"dompurify": "^3.2.6",
+		"googleapis": "^144.0.0",
 		"jodit-react": "^5.2.19",
 		"jsdom": "^26.1.0",
 		"lucide-react": "^0.542.0",
