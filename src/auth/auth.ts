@@ -42,20 +42,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		signIn: '/signIn',
 	},
 	callbacks: {
-		async jwt({ token, user, account }) {
-			console.log('[JWT_CALLBACK] Called', { userId: user?.id, hasAccount: !!account });
+		authorized({ auth, request: { nextUrl } }) {
+			const isAuthenticated = Boolean(auth?.user);
+			const isDashboardRoute = nextUrl.pathname.startsWith('/dashboard');
+			const isSignInRoute = nextUrl.pathname.startsWith('/signIn');
+
+			if (isDashboardRoute) {
+				return isAuthenticated;
+			}
+
+			if (isSignInRoute && isAuthenticated) {
+				return Response.redirect(new URL('/dashboard/profile', nextUrl));
+			}
+
+			return true;
+		},
+		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id;
 				token.username = user.username;
 				token.role = user.role;
 				token.firstname = user.firstname;
 				token.lastname = user.lastname;
-				console.log('[JWT_CALLBACK] Token updated for user:', user.username);
 			}
 			return token;
 		},
 		async session({ session, token }) {
-			console.log('[SESSION_CALLBACK] Called', { userId: token.id });
 			if (token) {
 				session.user.id = token.id as string;
 				session.user.username = token.username as string;
@@ -64,7 +76,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				>;
 				session.user.firstname = token.firstname as string | null;
 				session.user.lastname = token.lastname as string | null;
-				console.log('[SESSION_CALLBACK] Session updated for user:', token.username);
 			}
 			return session;
 		},
@@ -73,16 +84,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		Credentials({
 			credentials: {
 				username: { label: 'Username', type: 'text' },
-				password: { label: 'Password', type: 'text' },
+				password: { label: 'Password', type: 'password' },
 			},
 			async authorize(
 				credentials: Partial<Record<'username' | 'password', unknown>>,
-				req: Request
+				_req: Request
 			): Promise<User | null> {
 				try {
-					console.log('[AUTHORIZE] Starting authorization for:', credentials?.username);
 					if (!credentials?.username || !credentials.password) {
-						console.log('[AUTHORIZE] Missing credentials');
 						return null;
 					}
 
@@ -93,12 +102,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					});
 
 					if (!user) {
-						console.log('[AUTHORIZE] User not found:', credentials.username);
 						return null;
 					}
 
 					if (!user.password) {
-						console.log('[AUTHORIZE] User has no password:', credentials.username);
 						return null;
 					}
 
@@ -108,11 +115,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					);
 
 					if (!passwordsMatch) {
-						console.log('[AUTHORIZE] Password mismatch for user:', credentials.username);
 						return null;
 					}
 
-					console.log('[AUTHORIZE] Authorization successful for:', user.username);
 					return {
 						id: user.id,
 						username: user.username,
@@ -122,7 +127,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 						email: user.email || undefined,
 					};
 				} catch (error) {
-					console.error('[AUTHORIZE] Authentication error:', error);
+					console.error('Authentication error:', error);
 					return null;
 				}
 			},

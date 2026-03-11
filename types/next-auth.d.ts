@@ -1,6 +1,7 @@
 // Functions
 
 import { DefaultSession } from 'next-auth';
+import type { Role } from '@/constants/roles';
 
 declare module 'next-auth' {
 	interface Session {
@@ -8,8 +9,10 @@ declare module 'next-auth' {
 	}
 
 	interface User {
-		role: String[] | null;
-		firstname: String | null;
-		lastname: String | null;
+		id: string;
+		username: string;
+		role: Role[];
+		firstname: string | null;
+		lastname: string | null;
 	}
 }

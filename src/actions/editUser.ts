@@ -1,64 +1,52 @@
 'use server';
 
-// Functions
-
-import { auth } from '@/auth/auth';
 import bcrypt from 'bcryptjs';
 
-// Schemas
-
 import * as z from 'zod';
-import { RegisterSchema } from '../schemas';
-
-// Database
-
+import { EditUserSchema } from '../schemas';
 import { db } from '@/lib/db';
-import { requireAdmin, createErrorResponse, createSuccessResponse } from '@/lib/auth-utils';
-
-// Extended schema to include password fields
-const EditUserSchema = RegisterSchema.extend({
-	newPassword: z.string().min(8, 'Hasło musi mieć co najmniej 8 znaków'),
-	confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-	message: 'Hasła muszą się zgadzać',
-	path: ['confirmPassword'],
-});
+import {
+	createErrorResponse,
+	createSuccessResponse,
+	requireUserEditPermission,
+} from '@/lib/auth-utils';
+import { isAdmin } from '@/lib/permissions';
 
 export const editUser = async (
 	id: string,
 	values: z.infer<typeof EditUserSchema>
 ) => {
 	try {
-		// Ensure only admins can edit users
-		await requireAdmin();
+		const currentUser = await requireUserEditPermission(id);
 
-		// Validate user ID format (basic UUID/CUID check)
 		if (!id || typeof id !== 'string' || id.length < 10) {
-			return createErrorResponse(new Error('Invalid user ID'));
+			return createErrorResponse(new Error('Nieprawidłowy identyfikator użytkownika'));
 		}
 
-		// Check if target user exists
 		const existingUser = await db.user.findUnique({
 			where: { id },
-			select: { id: true, username: true }
+			select: {
+				id: true,
+				username: true,
+				role: true,
+			}
 		});
 
 		if (!existingUser) {
-			return createErrorResponse(new Error('User not found'));
+			return createErrorResponse(new Error('Nie znaleziono użytkownika'));
 		}
 
-		// Validating values with zod and EditUserSchema
 		const validatedFields = EditUserSchema.safeParse(values);
 
-		// Safe checking if all fields are valid
 		if (!validatedFields.success) {
-			return createErrorResponse(new Error(`Validation failed: ${JSON.stringify(validatedFields.error.flatten().fieldErrors)}`));
+			const issues = validatedFields.error.issues.map((issue) => issue.message).join(', ');
+			return createErrorResponse(new Error(issues));
 		}
 
 		const { username, role, firstname, lastname, newPassword } =
 			validatedFields.data;
+		const canManageRoles = isAdmin(currentUser.role);
 
-		// Check for username conflicts (excluding current user)
 		if (username !== existingUser.username) {
 			const usernameExists = await db.user.findFirst({
 				where: {
@@ -68,19 +56,17 @@ export const editUser = async (
 			});
 
 			if (usernameExists) {
-				return createErrorResponse(new Error('Username already exists'));
+				return createErrorResponse(new Error('Użytkownik o takiej nazwie już istnieje'));
 			}
 		}
 
-		// Hash password if provided
 		const hashedPassword = newPassword ? await bcrypt.hash(newPassword, 12) : undefined;
 
-		// Update user with explicit field mapping (no mass assignment)
 		await db.user.update({
 			where: { id },
 			data: {
 				username,
-				role,
+				role: canManageRoles ? role : existingUser.role,
 				firstname,
 				lastname,
 				...(hashedPassword && { password: hashedPassword }),
@@ -88,7 +74,7 @@ export const editUser = async (
 			},
 		});
 
-		return createSuccessResponse('User updated successfully');
+		return createSuccessResponse('Dane użytkownika zostały zapisane');
 	} catch (error) {
 		console.error('Error updating user:', error);
 		return createErrorResponse(error);

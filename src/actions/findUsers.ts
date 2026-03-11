@@ -3,6 +3,7 @@
 // Database
 
 import { db } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth-utils';
 
 interface PaginationParams {
 	page?: number;
@@ -30,6 +31,8 @@ interface User {
 
 export default async function findUsers({ page = 1, limit = 10 }: PaginationParams = {}): Promise<PaginatedResult<User>> {
 	try {
+		await requireAdmin();
+
 		const skip = (page - 1) * limit;
 
 		const [users, total] = await Promise.all([

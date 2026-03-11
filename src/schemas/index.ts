@@ -24,6 +24,45 @@ export const RegisterSchema = z.object({
 	role: z.array(roleEnum),
 });
 
+export const EditUserSchema = z
+	.object({
+		username: z.string().min(3),
+		firstname: z.string().min(3, {
+			message: 'Imię musi mieć minimum 3 litery',
+		}),
+		lastname: z.string().min(3, {
+			message: 'Nazwosko musi mieć minimum 3 litery',
+		}),
+		role: z.array(roleEnum),
+		newPassword: z.string().optional().or(z.literal('')),
+		confirmPassword: z.string().optional().or(z.literal('')),
+	})
+	.superRefine((data, ctx) => {
+		const wantsPasswordChange =
+			Boolean(data.newPassword && data.newPassword.length > 0) ||
+			Boolean(data.confirmPassword && data.confirmPassword.length > 0);
+
+		if (!wantsPasswordChange) {
+			return;
+		}
+
+		if (!data.newPassword || data.newPassword.length < 8) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Hasło musi mieć co najmniej 8 znaków',
+				path: ['newPassword'],
+			});
+		}
+
+		if (data.newPassword !== data.confirmPassword) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Hasła muszą się zgadzać',
+				path: ['confirmPassword'],
+			});
+		}
+	});
+
 export const PostSchema = z.object({
 	content: z.string().min(10, {
 		message: 'Treść musi mieć minimum 10 znaków',
