@@ -52,6 +52,18 @@ export async function POST(request: Request) {
 		return NextResponse.json({ url });
 	} catch (error) {
 		console.error('Upload image error:', error);
+
+		const errorMessage = error instanceof Error ? error.message : '';
+		if (errorMessage.includes('Service Accounts do not have storage quota')) {
+			return NextResponse.json(
+				{
+					error:
+						'Google blokuje upload: konto serwisowe nie ma quota na "Mój dysk". Użyj folderu w Shared Drive i ustaw jego ID w GOOGLE_DRIVE_FOLDER_ID.',
+				},
+				{ status: 400 }
+			);
+		}
+
 		return NextResponse.json(
 			{ error: 'Nie udało się przesłać zdjęcia' },
 			{ status: 500 }

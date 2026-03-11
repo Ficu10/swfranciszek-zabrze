@@ -21,7 +21,7 @@ const getDriveClient = () => {
 	const auth = new google.auth.JWT({
 		email: clientEmail,
 		key: privateKey,
-		scopes: ['https://www.googleapis.com/auth/drive.file'],
+		scopes: ['https://www.googleapis.com/auth/drive'],
 	});
 
 	return google.drive({ version: 'v3', auth });
@@ -50,6 +50,7 @@ export const uploadImageToDrive = async ({
 			mimeType,
 			body: stream,
 		},
+		supportsAllDrives: true,
 		fields: 'id, webContentLink',
 	});
 
@@ -61,6 +62,7 @@ export const uploadImageToDrive = async ({
 
 	await drive.permissions.create({
 		fileId,
+		supportsAllDrives: true,
 		requestBody: {
 			role: 'reader',
 			type: 'anyone',
