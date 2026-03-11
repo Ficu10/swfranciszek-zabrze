@@ -44,8 +44,8 @@ import { stripHtml } from '@/lib/html';
 
 interface Post {
 	id: string;
-	title: string;
-	slug: string;
+	title: string | null;
+	slug: string | null;
 	author: string;
 	createdAt: Date;
 	content: string;
@@ -141,10 +141,10 @@ const OgloszeniaParafialne = () => {
 											.replace(',', '')}
 									</p>
 									<Link
-										href={`/aktualnosci/${post.slug}`}
+										href={post.slug ? `/aktualnosci/${post.slug}` : '#'}
 										className="text-2xl font-semibold mt-2 hover:underline"
 									>
-										{post.title}
+										{post.title ?? 'Bez tytułu'}
 									</Link>
 									<p className="mt-3 text-gray-700">{stripHtml(post.content).slice(0, 260)}...</p>
 									{hasRole && (
