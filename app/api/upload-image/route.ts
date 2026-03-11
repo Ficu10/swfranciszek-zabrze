@@ -1,6 +1,6 @@
 import { auth } from '@/auth/auth';
 import { canManagePosts } from '@/lib/permissions';
-import { uploadImageToDrive } from '@/lib/google-drive';
+import { uploadImageToCloudinary } from '@/lib/cloudinary';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
 		const arrayBuffer = await image.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
-		const { url } = await uploadImageToDrive({
+		const { url } = await uploadImageToCloudinary({
 			buffer,
 			filename: image.name,
 			mimeType: image.type || 'application/octet-stream',
@@ -53,19 +53,13 @@ export async function POST(request: Request) {
 	} catch (error) {
 		console.error('Upload image error:', error);
 
-		const errorMessage = error instanceof Error ? error.message : '';
-		if (errorMessage.includes('Service Accounts do not have storage quota')) {
-			return NextResponse.json(
-				{
-					error:
-						'Google blokuje upload: konto serwisowe nie ma quota na "Mój dysk". Użyj folderu w Shared Drive i ustaw jego ID w GOOGLE_DRIVE_FOLDER_ID.',
-				},
-				{ status: 400 }
-			);
-		}
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: 'Nie udało się przesłać zdjęcia';
 
 		return NextResponse.json(
-			{ error: 'Nie udało się przesłać zdjęcia' },
+			{ error: errorMessage },
 			{ status: 500 }
 		);
 	}
