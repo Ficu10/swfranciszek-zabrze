@@ -1,6 +1,6 @@
 import { auth } from '@/auth/auth';
 import { canManagePosts } from '@/lib/permissions';
-import { uploadImageToCloudinary } from '@/lib/cloudinary';
+import { uploadImageToDrive } from '@/lib/google-drive';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
 		const arrayBuffer = await image.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
-		const { url } = await uploadImageToCloudinary({
+		const { url } = await uploadImageToDrive({
 			buffer,
 			filename: image.name,
 			mimeType: image.type || 'application/octet-stream',
@@ -57,6 +57,16 @@ export async function POST(request: Request) {
 			error instanceof Error
 				? error.message
 				: 'Nie udało się przesłać zdjęcia';
+
+		if (errorMessage.includes('invalid_grant')) {
+			return NextResponse.json(
+				{
+					error:
+						'Token Google OAuth jest nieprawidłowy lub wygasł. Wygeneruj nowy refresh token i zaktualizuj GOOGLE_OAUTH_REFRESH_TOKEN.',
+				},
+				{ status: 400 }
+			);
+		}
 
 		return NextResponse.json(
 			{ error: errorMessage },

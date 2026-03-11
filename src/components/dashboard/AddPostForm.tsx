@@ -180,7 +180,7 @@ export default function AddPostForm() {
 								</div>
 								<div className="flex flex-col gap-y-4">
 									<p className="text-sm">
-										Wgraj zdjęcie bezpośrednio do chmury, a system automatycznie
+										Wgraj zdjęcie bezpośrednio do Google Drive, a system automatycznie
 										doda je do treści posta.
 									</p>
 									<div>
@@ -193,7 +193,7 @@ export default function AddPostForm() {
 										/>
 										{isUploading && (
 											<p className="text-sm text-muted-foreground mt-1">
-												Wgrywam zdjęcie...
+												Wgrywam zdjęcie do Google Drive...
 											</p>
 										)}
 									</div>

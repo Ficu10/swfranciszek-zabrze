@@ -8,21 +8,16 @@ type UploadImageInput = {
 };
 
 const getDriveClient = () => {
-	const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-	const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(
-		/\\n/g,
-		'\n'
-	);
+	const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+	const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+	const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
 
-	if (!clientEmail || !privateKey) {
-		throw new Error('Brakuje konfiguracji Google Service Account');
+	if (!clientId || !clientSecret || !refreshToken) {
+		throw new Error('Brakuje konfiguracji Google OAuth');
 	}
 
-	const auth = new google.auth.JWT({
-		email: clientEmail,
-		key: privateKey,
-		scopes: ['https://www.googleapis.com/auth/drive'],
-	});
+	const auth = new google.auth.OAuth2(clientId, clientSecret);
+	auth.setCredentials({ refresh_token: refreshToken });
 
 	return google.drive({ version: 'v3', auth });
 };
@@ -62,7 +57,6 @@ export const uploadImageToDrive = async ({
 
 	await drive.permissions.create({
 		fileId,
-		supportsAllDrives: true,
 		requestBody: {
 			role: 'reader',
 			type: 'anyone',
