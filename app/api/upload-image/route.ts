@@ -33,10 +33,10 @@ export async function POST(request: Request) {
 			);
 		}
 
-		const maxFileSize = 10 * 1024 * 1024;
+		const maxFileSize = 4 * 1024 * 1024;
 		if (image.size > maxFileSize) {
 			return NextResponse.json(
-				{ error: 'Plik jest za duży (max 10MB)' },
+				{ error: 'Plik jest za duży (max 4MB)' },
 				{ status: 400 }
 			);
 		}

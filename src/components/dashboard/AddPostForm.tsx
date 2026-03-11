@@ -66,10 +66,30 @@ export default function AddPostForm() {
 				body: formData,
 			});
 
+			if (!response.ok) {
+				if (response.status === 413) {
+					setError('Plik jest za duży dla serwera (max 4MB)');
+					return;
+				}
+
+				let message = 'Nie udało się przesłać zdjęcia';
+				const isJson = response.headers
+					.get('content-type')
+					?.includes('application/json');
+
+				if (isJson) {
+					const payload = await response.json();
+					message = payload.error ?? message;
+				}
+
+				setError(message);
+				return;
+			}
+
 			const payload = await response.json();
 
-			if (!response.ok || !payload.url) {
-				setError(payload.error ?? 'Nie udało się przesłać zdjęcia');
+			if (!payload.url) {
+				setError('Nie udało się przesłać zdjęcia');
 				return;
 			}
 
