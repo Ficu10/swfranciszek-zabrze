@@ -316,11 +316,11 @@ const Footer = () => {
 					</div>
 				)}
 
-				<div className="flex flex-col lg:flex-row mt-10 justify-between items-center gap-4">
-					<p className="text-left text-md flex items-center">
+				<div className="flex flex-col lg:flex-row mt-10 justify-between items-center gap-6 border-t border-white/20 pt-6">
+					<p className="text-white text-base lg:text-lg font-medium flex items-center">
 						&copy; Parafia św. Franciszka w Zabrzu
 					</p>
-					<div className="flex justify-evenly lg:items-center lg:gap-x-4">
+					<div className="flex items-center gap-6 lg:gap-8">
 						{socialLinks
 							.filter((link) => Boolean(link.href))
 							.map((link) => {
@@ -331,8 +331,9 @@ const Footer = () => {
 										href={link.href}
 										target="_blank"
 										rel="noopener noreferrer"
+										className="text-white hover:text-amber-400 transition-colors duration-200"
 									>
-										<Icon className="text-2xl text-white hover:text-gray-300 transition-colors" />
+										<Icon className="text-3xl" />
 									</a>
 								);
 							})}
