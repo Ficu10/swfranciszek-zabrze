@@ -152,7 +152,7 @@ const Footer = () => {
 	];
 
 	return (
-		<footer className="text-white p-6 pb-5 lg:p-10 lg:pb-5">
+		<footer className="bg-slate-900 text-white p-6 pb-5 lg:p-10 lg:pb-5">
 			<MaxWidthWrapper>
 				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
 					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
@@ -331,9 +331,9 @@ const Footer = () => {
 										href={link.href}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="hover:text-amber-400 transition-colors duration-200"
+										className="text-white hover:text-amber-400 transition-colors duration-200"
 									>
-										<Icon className="text-3xl text-white" />
+										<Icon className="text-3xl" />
 									</a>
 								);
 							})}
