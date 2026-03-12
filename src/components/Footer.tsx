@@ -5,11 +5,19 @@ import findFooterData from '@/actions/findFooterData';
 import saveFooterData from '@/actions/saveFooterData';
 import MaxWidthWrapper from './MaxWidthWrapper';
 import { FaLocationDot } from 'react-icons/fa6';
-import { FaPhone, FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa';
+import {
+	FaPhone,
+	FaFacebook,
+	FaTwitter,
+	FaYoutube,
+	FaInstagram,
+} from 'react-icons/fa';
 import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { IoMdMail, IoMdContact } from 'react-icons/io';
 import { useSession } from 'next-auth/react';
 import { BsBank } from 'react-icons/bs';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 interface FooterProps {
 	address: string;
@@ -29,19 +37,33 @@ const Footer = () => {
 	const [editValues, setEditValues] = useState<FooterProps | null>(null);
 	const { data: session } = useSession();
 
+	const normalizeOfficeHoursForEditor = (value: string) =>
+		value
+			.replace(/<br\s*\/?>/gi, '\n')
+			.replace(/<\/p>\s*<p>/gi, '\n')
+			.replace(/<[^>]*>/g, '')
+			.trim();
+
+	const formatOfficeHoursForHtml = (value: string) =>
+		value
+			.split('\n')
+			.map((line) => line.trim())
+			.filter(Boolean)
+			.join('<br />');
+
 	useEffect(() => {
 		const fetchFooterData = async () => {
 			try {
-				console.log('[FOOTER] Fetching footer data...');
 				const data = await findFooterData();
-				console.log('[FOOTER] Footer data fetched successfully:', data);
 				setFooterData(data);
-				setEditValues(data);
+				setEditValues({
+					...data,
+					officeHours: normalizeOfficeHoursForEditor(data.officeHours),
+				});
 				setLoading(false);
 			} catch (error) {
-				console.error('[FOOTER] Error fetching footer data:', error);
+				console.error('Error fetching footer data:', error);
 				setLoading(false);
-				// Set default footer data on error
 				setFooterData({
 					address: 'Address not available',
 					officeHours: 'Office hours not available',
@@ -71,9 +93,18 @@ const Footer = () => {
 		if (!editValues) return;
 
 		try {
-			const result = await saveFooterData(editValues);
+			const payload = {
+				...editValues,
+				officeHours: formatOfficeHoursForHtml(editValues.officeHours),
+			};
+
+			const result = await saveFooterData(payload);
 			if (result) {
-				setFooterData(editValues);
+				setFooterData(payload);
+				setEditValues({
+					...payload,
+					officeHours: normalizeOfficeHoursForEditor(payload.officeHours),
+				});
 				setIsEditing(false);
 			} else {
 				alert('Failed to save changes');
@@ -92,142 +123,207 @@ const Footer = () => {
 		return <div>Error loading footer data</div>;
 	}
 
+	const socialLinks = [
+		{ key: 'facebook', href: footerData.facebook, icon: FaFacebook },
+		{ key: 'twitter', href: footerData.twitter, icon: FaTwitter },
+		{ key: 'instagram', href: footerData.instagram, icon: FaInstagram },
+		{ key: 'youtube', href: footerData.youtube, icon: FaYoutube },
+	];
+
 	return (
-		<footer className="text-white p-10 pb-5">
+		<footer className="text-white p-6 pb-5 lg:p-10 lg:pb-5">
 			<MaxWidthWrapper>
-				<div className="flex flex-col gap-y-8 lg:flex-row lg:justify-between text-sm items-center">
-					<div className="flex flex-col gap-y-4 text-center items-center relative">
-						<FaLocationDot className="text-3xl" />
-						<h4 className="text-2xl font-bold">Adres parafii</h4>
-						{isEditing ? (
-							<textarea
-								name="address"
-								value={editValues!.address}
-								onChange={handleChange}
-								className="text-black p-2"
-							/>
-						) : (
-							<p>
-								{footerData.address.split('\n').map((line, index) => (
-									<span key={index}>
-										{line}
-										<br />
-									</span>
-								))}
-							</p>
-						)}
-					</div>
-					<div className="flex flex-col gap-y-4 text-center items-center relative">
-						<HiMiniBuildingOffice className="text-3xl" />
-						<h4 className="text-2xl font-bold">Kancelaria Parafialna</h4>
-						{isEditing ? (
-							<textarea
-								name="officeHours"
-								value={editValues!.officeHours}
-								onChange={handleChange}
-								className="text-black p-2"
-							/>
-						) : (
-							<div
-								dangerouslySetInnerHTML={{ __html: footerData.officeHours }}
-							/>
-						)}
-					</div>
-					<div className="flex flex-col gap-y-4 text-center items-center relative">
-						<IoMdContact className="text-3xl" />
-						<h4 className="text-2xl font-bold">Kontakt</h4>
-						<div className="flex gap-x-5 items-center justify-center">
-							<FaPhone className="text-2xl" />
-							{isEditing ? (
-								<input
-									name="contactPhone"
-									value={editValues!.contactPhone}
-									onChange={handleChange}
-									className="text-black p-2"
-								/>
-							) : (
-								<p>{footerData.contactPhone}</p>
-							)}
+				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
+					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+						<div className="flex items-center gap-3">
+							<FaLocationDot className="text-2xl" />
+							<h4 className="text-xl font-bold">Adres parafii</h4>
 						</div>
-						<div className="flex gap-x-5 items-center justify-center">
-							<IoMdMail className="text-2xl" />
-							{isEditing ? (
-								<input
-									name="contactEmail"
-									value={editValues!.contactEmail}
-									onChange={handleChange}
-									className="text-black p-2"
-								/>
-							) : (
-								<p>{footerData.contactEmail}</p>
-							)}
-						</div>
+						<p className="whitespace-pre-line leading-relaxed">{footerData.address}</p>
 					</div>
-					<div className="flex flex-col gap-y-4 text-center items-center relative">
-						<BsBank className="text-3xl" />
-						<h4 className="text-2xl font-bold">Konto Parafialne</h4>
-						<div className="flex flex-col gap-x-5 items-center justify-center">
-							<div>
-								Orzesko - Knurowski Bank Spółdzielczy
-								<br />
-								34-8454-1082-2006-0023-9628-0001
+
+					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+						<div className="flex items-center gap-3">
+							<HiMiniBuildingOffice className="text-2xl" />
+							<h4 className="text-xl font-bold">Kancelaria parafialna</h4>
+						</div>
+						<div
+							className="leading-relaxed"
+							dangerouslySetInnerHTML={{ __html: footerData.officeHours }}
+						/>
+					</div>
+
+					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+						<div className="flex items-center gap-3">
+							<IoMdContact className="text-2xl" />
+							<h4 className="text-xl font-bold">Kontakt</h4>
+						</div>
+						<div className="space-y-2">
+							<div className="flex items-center gap-2">
+								<FaPhone className="text-lg" />
+								<span>{footerData.contactPhone}</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<IoMdMail className="text-lg" />
+								<span>{footerData.contactEmail}</span>
 							</div>
 						</div>
 					</div>
+
+					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+						<div className="flex items-center gap-3">
+							<BsBank className="text-2xl" />
+							<h4 className="text-xl font-bold">Konto parafialne</h4>
+						</div>
+						<div className="leading-relaxed">
+							Orzesko - Knurowski Bank Spółdzielczy
+							<br />
+							34-8454-1082-2006-0023-9628-0001
+						</div>
+					</div>
 				</div>
-				<div className="flex flex-col lg:flex-row mt-14 justify-between">
+
+				{session?.user?.role?.includes('admin') && isEditing && editValues && (
+					<div className="mt-8 rounded-xl border border-white/20 bg-white/10 p-5 space-y-4">
+						<h4 className="text-xl font-bold">Edycja stopki</h4>
+						<p className="text-sm text-white/80">
+							Wpisuj każdą linię osobno. Dla godzin kancelarii użyj nowej linii
+							dla kolejnego dnia.
+						</p>
+
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Adres parafii</label>
+								<textarea
+									name="address"
+									value={editValues.address}
+									onChange={handleChange}
+									rows={5}
+									className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Godziny kancelarii</label>
+								<textarea
+									name="officeHours"
+									value={editValues.officeHours}
+									onChange={handleChange}
+									rows={5}
+									className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Telefon</label>
+								<Input
+									name="contactPhone"
+									value={editValues.contactPhone}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Email</label>
+								<Input
+									name="contactEmail"
+									value={editValues.contactEmail}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Facebook URL</label>
+								<Input
+									name="facebook"
+									value={editValues.facebook}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">X/Twitter URL</label>
+								<Input
+									name="twitter"
+									value={editValues.twitter}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Instagram URL</label>
+								<Input
+									name="instagram"
+									value={editValues.instagram}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">YouTube URL</label>
+								<Input
+									name="youtube"
+									value={editValues.youtube}
+									onChange={handleChange}
+									className="text-black"
+								/>
+							</div>
+						</div>
+
+						<div className="flex gap-2 pt-2">
+							<Button onClick={handleSave}>Zapisz</Button>
+							<Button
+								onClick={() => {
+									setIsEditing(false);
+									setEditValues({
+										...footerData,
+										officeHours: normalizeOfficeHoursForEditor(
+											footerData.officeHours
+										),
+									});
+								}}
+								variant="destructive"
+							>
+								Anuluj
+							</Button>
+						</div>
+					</div>
+				)}
+
+				<div className="flex flex-col lg:flex-row mt-10 justify-between items-center gap-4">
 					<p className="text-left text-md flex items-center">
 						&copy; Parafia św. Franciszka w Zabrzu
 					</p>
-					<div className="flex justify-evenly mt-6 lg:items-center lg:gap-x-4 lg:mt-0">
-						<a
-							href={'https://www.facebook.com/swfranciszekzabrze/?locale=pl_PL'}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<FaFacebook className="text-2xl" />
-						</a>
-						<a
-							href={'https://x.com/franciszek_zab'}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<FaTwitter className="text-2xl" />
-						</a>
-						<a
-							href={'https://www.youtube.com/channel/UCsoJROoNWSobb5hoR6kQ0mQ'}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<FaYoutube className="text-2xl" />
-						</a>
+					<div className="flex justify-evenly lg:items-center lg:gap-x-4">
+						{socialLinks
+							.filter((link) => Boolean(link.href))
+							.map((link) => {
+								const Icon = link.icon;
+								return (
+									<a
+										key={link.key}
+										href={link.href}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Icon className="text-2xl" />
+									</a>
+								);
+							})}
+						{socialLinks.every((link) => !link.href) && (
+							<span className="text-sm text-white/70">Brak linków społecznościowych</span>
+						)}
 					</div>
 				</div>
-				{session?.user?.role?.includes('admin') && (
+
+				{session?.user?.role?.includes('admin') && !isEditing && (
 					<div className="mt-6 flex justify-center">
-						{isEditing ? (
-							<>
-								<button
-									onClick={handleSave}
-									className="bg-green-500 text-white p-2 rounded"
-								>
-									Zapisz
-								</button>
-								<button
-									onClick={() => setIsEditing(false)}
-									className="bg-red-500 text-white p-2 rounded ml-4"
-								>
-									Anuluj
-								</button>
-							</>
-						) : (
-							<button
-								onClick={() => setIsEditing(true)}
-								className="bg-blue-500 text-white p-2 rounded"
-							>
-								Edytuj
-							</button>
-						)}
+						<Button onClick={() => setIsEditing(true)}>Edytuj stopkę</Button>
 					</div>
 				)}
 			</MaxWidthWrapper>
