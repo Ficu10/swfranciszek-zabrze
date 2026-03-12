@@ -332,7 +332,7 @@ const Footer = () => {
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										<Icon className="text-2xl" />
+										<Icon className="text-2xl text-white hover:text-gray-300 transition-colors" />
 									</a>
 								);
 							})}
