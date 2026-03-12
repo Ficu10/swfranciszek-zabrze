@@ -8,6 +8,20 @@ interface PostDetailsPageProps {
 	params: Promise<{ slug: string }>;
 }
 
+const normalizeDriveImageUrls = (content: string) => {
+	let normalized = content.replace(
+		/src="https:\/\/drive\.google\.com\/[^\"]*[?&]id=([a-zA-Z0-9_-]+)[^\"]*"/g,
+		'src="/api/drive-image/$1"'
+	);
+
+	normalized = normalized.replace(
+		/src="https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)[^\"]*"/g,
+		'src="/api/drive-image/$1"'
+	);
+
+	return normalized;
+};
+
 export default async function PostDetailsPage({ params }: PostDetailsPageProps) {
 	const { slug } = await params;
 	const post = await findPostBySlug(slug);
@@ -15,6 +29,8 @@ export default async function PostDetailsPage({ params }: PostDetailsPageProps) 
 	if (!post) {
 		notFound();
 	}
+
+	const normalizedContent = normalizeDriveImageUrls(post.content);
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between bg-white relative overflow-hidden">
@@ -32,7 +48,7 @@ export default async function PostDetailsPage({ params }: PostDetailsPageProps) 
 				<div
 					className="dangerouslySetInnerHTML flex flex-col max-w-fit w-[100ch] mb-14"
 					dangerouslySetInnerHTML={{
-						__html: post.content,
+						__html: normalizedContent,
 					}}
 				></div>
 				<hr className="w-full mb-7" />

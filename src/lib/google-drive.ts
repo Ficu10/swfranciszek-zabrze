@@ -7,7 +7,7 @@ type UploadImageInput = {
 	mimeType: string;
 };
 
-const getDriveClient = () => {
+export const getDriveClient = () => {
 	const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
 	const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
 	const refreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
@@ -65,6 +65,6 @@ export const uploadImageToDrive = async ({
 
 	return {
 		fileId,
-		url: `https://drive.google.com/uc?export=view&id=${fileId}`,
+		url: `/api/drive-image/${fileId}`,
 	};
 };
