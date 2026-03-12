@@ -331,9 +331,9 @@ const Footer = () => {
 										href={link.href}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="text-white hover:text-amber-400 transition-colors duration-200"
+										className="hover:text-amber-400 transition-colors duration-200"
 									>
-										<Icon className="text-3xl" />
+										<Icon className="text-3xl text-white" />
 									</a>
 								);
 							})}
