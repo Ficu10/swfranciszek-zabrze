@@ -30,6 +30,29 @@ interface FooterProps {
 	youtube: string;
 }
 
+const DEFAULT_FOOTER_VALUES: FooterProps = {
+	address: 'Parafia św. Franciszka\nul. Wolności 446\n41-806 Zabrze',
+	officeHours:
+		'Poniedziałek: 8:00 - 9:00<br />Wtorek: 16:00 - 17:00<br />Środa: 8:00 - 9:00<br />Czwartek: 16:00 - 17:00<br />Piątek: 8:00 - 9:00',
+	contactPhone: '+48 32 271 31 52',
+	contactEmail: 'parafia@swfranciszekzabrze.pl',
+	instagram: '',
+	twitter: 'https://x.com/franciszek_zab',
+	facebook: 'https://www.facebook.com/swfranciszekzabrze/?locale=pl_PL',
+	youtube: 'https://www.youtube.com/channel/UCsoJROoNWSobb5hoR6kQ0mQ',
+};
+
+const getResolvedFooterData = (data: FooterProps): FooterProps => ({
+	address: data.address?.trim() || DEFAULT_FOOTER_VALUES.address,
+	officeHours: data.officeHours?.trim() || DEFAULT_FOOTER_VALUES.officeHours,
+	contactPhone: data.contactPhone?.trim() || DEFAULT_FOOTER_VALUES.contactPhone,
+	contactEmail: data.contactEmail?.trim() || DEFAULT_FOOTER_VALUES.contactEmail,
+	instagram: data.instagram?.trim() || DEFAULT_FOOTER_VALUES.instagram,
+	twitter: data.twitter?.trim() || DEFAULT_FOOTER_VALUES.twitter,
+	facebook: data.facebook?.trim() || DEFAULT_FOOTER_VALUES.facebook,
+	youtube: data.youtube?.trim() || DEFAULT_FOOTER_VALUES.youtube,
+});
+
 const Footer = () => {
 	const [footerData, setFooterData] = useState<FooterProps | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -55,24 +78,22 @@ const Footer = () => {
 		const fetchFooterData = async () => {
 			try {
 				const data = await findFooterData();
-				setFooterData(data);
+				const resolvedData = getResolvedFooterData(data);
+				setFooterData(resolvedData);
 				setEditValues({
-					...data,
-					officeHours: normalizeOfficeHoursForEditor(data.officeHours),
+					...resolvedData,
+					officeHours: normalizeOfficeHoursForEditor(resolvedData.officeHours),
 				});
 				setLoading(false);
 			} catch (error) {
 				console.error('Error fetching footer data:', error);
 				setLoading(false);
-				setFooterData({
-					address: 'Address not available',
-					officeHours: 'Office hours not available',
-					contactPhone: 'Phone not available',
-					contactEmail: 'Email not available',
-					instagram: '',
-					twitter: '',
-					facebook: '',
-					youtube: '',
+				setFooterData(DEFAULT_FOOTER_VALUES);
+				setEditValues({
+					...DEFAULT_FOOTER_VALUES,
+					officeHours: normalizeOfficeHoursForEditor(
+						DEFAULT_FOOTER_VALUES.officeHours
+					),
 				});
 			}
 		};
