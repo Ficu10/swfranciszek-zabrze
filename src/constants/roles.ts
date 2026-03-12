@@ -13,6 +13,7 @@ export const ROLES = {
 	ROZEROZANCOWE: 'rozerozancowe',
 	WSPOLNOTAZMARTWYCHWSTANIA: 'wspolnotazmartwychwstania',
 	POSLUGADUSZPASTERSKA: 'poslugaduszpasterska',
+	DOMOWYKOSCIOL: 'domowykosciol',
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];

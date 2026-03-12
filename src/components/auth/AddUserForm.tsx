@@ -41,6 +41,7 @@ const roles = [
 	'rozerozancowe',
 	'wspolnotazmartwychwstania',
 	'poslugaduszpasterska',
+	'domowykosciol',
 ] as const;
 
 const AddUserForm = () => {
