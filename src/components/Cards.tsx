@@ -21,10 +21,10 @@ const Cards = () => {
 					<hr />
 				</div>
 			</Link>
-			<Link href="/nowe-informacje">
+			<Link href="/aktualnosci/intencje-mszalne">
 				<div className="flex flex-col items-center justify-center pt-10 gap-y-5 w-[300px] h-[200px] shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] hover:shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px]">
 					<FaMessage />
-					<h2 className="2xl">Najnowsze informacje</h2>
+					<h2 className="2xl">Intencje mszalne</h2>
 					<hr />
 				</div>
 			</Link>

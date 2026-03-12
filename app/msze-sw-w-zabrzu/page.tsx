@@ -1,68 +1,120 @@
-// Components
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
+
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import { SafeHTML } from '@/components/SafeHTML';
+import { Button } from '@/components/ui/button';
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/table';
+import findMszeSwWZabrzuData from '@/actions/findMszeSwWZabrzuData';
+import saveMszeSwWZabrzuData from '@/actions/saveMszeSwWZabrzuData';
 
-import msze from '@/constants/msze';
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
-export default function mszeSwWZabrzu() {
+interface MszeSwWZabrzuProps {
+	content: string;
+}
+
+export default function MszeSwWZabrzu() {
+	const [mszeData, setMszeData] = useState<MszeSwWZabrzuProps | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [isEditing, setIsEditing] = useState(false);
+	const [editValues, setEditValues] = useState<MszeSwWZabrzuProps | null>(null);
+	const { data: session } = useSession();
+
+	useEffect(() => {
+		const fetchMszeData = async () => {
+			try {
+				const data = await findMszeSwWZabrzuData();
+				setMszeData(data);
+				setEditValues(data);
+				setLoading(false);
+			} catch (error) {
+				console.error('Error fetching MszeSwWZabrzu data:', error);
+				setLoading(false);
+			}
+		};
+
+		fetchMszeData();
+	}, []);
+
+	const handleContentChange = (newContent: string) => {
+		setEditValues((prevEditValues) =>
+			prevEditValues
+				? { ...prevEditValues, content: newContent }
+				: prevEditValues
+		);
+	};
+
+	const handleSave = async () => {
+		if (!editValues) return;
+
+		try {
+			const result = await saveMszeSwWZabrzuData(editValues);
+			if (result.success) {
+				setMszeData(editValues);
+				setIsEditing(false);
+				alert('message' in result ? result.message : 'Changes saved successfully');
+			} else {
+				alert('error' in result ? result.error : 'Failed to save changes');
+			}
+		} catch (error) {
+			console.error('Error saving data:', error);
+			alert('Failed to save changes');
+		}
+	};
+
+	if (loading) {
+		return <div className="min-h-screen bg-white" />;
+	}
+
+	if (!mszeData) {
+		return <div>Error loading Msze święte data</div>;
+	}
+
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between bg-white relative overflow-hidden">
 			<MaxWidthWrapper className="flex flex-col items-center justify-center mt-7">
-				<hr className="w-full mb-7" />
-				<div className="flex flex-col max-w-fit w-[80ch] mb-14">
-					<h2 className="text-3xl pb-5 font-bold">Msze Święte w Zabrzu</h2>
-					<p>
-						Udział w niedzielnej Eucharystii jest obowiązkiem katolika
-						wynikającym z Przykazania Bożego: Pamiętaj, abyś dzień święty
-						święcił.
-					</p>
-					<h3 className="text-xl py-6 font-bold">
-						{' '}
-						W czasie wakacyjnym godziny Mszy św. należy sprawdzić na stronie
-						internetowej parafii
-					</h3>
-
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead className="w-[100px]">Godzina</TableHead>
-								<TableHead className="text-right">Kościoły</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{msze.map((godzina) => (
-								<TableRow key={godzina.godzina}>
-									<TableCell className="font-medium">
-										{godzina.godzina}
-									</TableCell>
-									<TableCell>
-										<div className="w-full h-full flex flex-col justify-center items-end gap-y-2">
-											{godzina.koscioly.map((kosciol) =>
-												kosciol.includes('Wolności 446') ? (
-													<span key={kosciol} className="text-base">
-														{' '}
-														<strong>{kosciol} </strong>
-													</span>
-												) : (
-													<span key={kosciol}> {kosciol} </span>
-												)
-											)}
-										</div>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</div>
-				<hr className="w-full mb-7" />
+				{isEditing ? (
+					<>
+						<div className="dangerouslySetInnerHTML">
+							<JoditEditor
+								value={editValues?.content || ''}
+								onChange={handleContentChange}
+								className="w-full p-4 border rounded min-h-screen"
+							/>
+						</div>
+					</>
+				) : (
+					<>
+						<hr className="w-full mb-7" />
+						<SafeHTML
+							content={mszeData.content}
+							className="flex flex-col max-w-fit w-[100ch] mb-14"
+							fallback="Content loading..."
+						/>
+						<hr className="w-full my-7" />
+					</>
+				)}
+				{session?.user?.role?.includes('admin') && (
+					<div className="mt-4 flex gap-2 my-7">
+						{isEditing ? (
+							<>
+								<Button onClick={handleSave}>Zapisz</Button>
+								<Button
+									onClick={() => setIsEditing(false)}
+									variant={'destructive'}
+								>
+									Odrzuć
+								</Button>
+							</>
+						) : (
+							<Button onClick={() => setIsEditing(true)}>Edytuj</Button>
+						)}
+					</div>
+				)}
 			</MaxWidthWrapper>
 		</main>
 	);
