@@ -203,9 +203,9 @@ const Footer = () => {
 								<FaPhone className="text-lg text-white" />
 								<span>{footerData.contactPhone}</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<IoMdMail className="text-lg text-white" />
-								<span>{footerData.contactEmail}</span>
+						<div className="flex items-start gap-2">
+							<IoMdMail className="text-lg text-white mt-0.5 shrink-0" />
+							<span className="break-all">{footerData.contactEmail}</span>
 							</div>
 						</div>
 					</div>
