@@ -48,7 +48,6 @@ const Nav: React.FC = () => {
 			title: 'Podstawowe informacje',
 			href: '/nasza-parafia/podstawowe-informacje',
 		},
-		{ title: 'Kancelaria', href: '/nasza-parafia/kancelarie' },
 		{ title: 'Duszpasterze', href: '/nasza-parafia/duszpasterze' },
 		{ title: 'Dzieci Maryi', href: '/nasza-parafia/dzieci-maryi' },
 		{ title: 'Ministranci', href: '/nasza-parafia/ministranci' },
