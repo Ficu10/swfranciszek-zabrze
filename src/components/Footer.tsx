@@ -155,48 +155,48 @@ const Footer = () => {
 		<footer className="text-white p-6 pb-5 lg:p-10 lg:pb-5">
 			<MaxWidthWrapper>
 				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
-					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
-							<FaLocationDot className="text-2xl" />
-							<h4 className="text-xl font-bold">Adres parafii</h4>
+							<FaLocationDot className="text-2xl text-white" />
+							<h4 className="text-xl font-bold text-white">Adres parafii</h4>
 						</div>
-						<p className="whitespace-pre-line leading-relaxed">{footerData.address}</p>
+						<p className="whitespace-pre-line leading-relaxed text-gray-100">{footerData.address}</p>
 					</div>
 
-					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
-							<HiMiniBuildingOffice className="text-2xl" />
-							<h4 className="text-xl font-bold">Kancelaria parafialna</h4>
+							<HiMiniBuildingOffice className="text-2xl text-white" />
+							<h4 className="text-xl font-bold text-white">Kancelaria parafialna</h4>
 						</div>
 						<div
-							className="leading-relaxed"
+							className="leading-relaxed text-gray-100"
 							dangerouslySetInnerHTML={{ __html: footerData.officeHours }}
 						/>
 					</div>
 
-					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
-							<IoMdContact className="text-2xl" />
-							<h4 className="text-xl font-bold">Kontakt</h4>
+							<IoMdContact className="text-2xl text-white" />
+							<h4 className="text-xl font-bold text-white">Kontakt</h4>
 						</div>
-						<div className="space-y-2">
+						<div className="space-y-2 text-gray-100">
 							<div className="flex items-center gap-2">
-								<FaPhone className="text-lg" />
+								<FaPhone className="text-lg text-white" />
 								<span>{footerData.contactPhone}</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<IoMdMail className="text-lg" />
+								<IoMdMail className="text-lg text-white" />
 								<span>{footerData.contactEmail}</span>
 							</div>
 						</div>
 					</div>
 
-					<div className="rounded-xl border border-white/20 bg-white/5 p-5 space-y-3">
+					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
-							<BsBank className="text-2xl" />
-							<h4 className="text-xl font-bold">Konto parafialne</h4>
+							<BsBank className="text-2xl text-white" />
+							<h4 className="text-xl font-bold text-white">Konto parafialne</h4>
 						</div>
-						<div className="leading-relaxed">
+						<div className="leading-relaxed text-gray-100">
 							Orzesko - Knurowski Bank Spółdzielczy
 							<br />
 							34-8454-1082-2006-0023-9628-0001
