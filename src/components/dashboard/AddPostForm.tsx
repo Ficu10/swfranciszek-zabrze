@@ -96,7 +96,7 @@ export default function AddPostForm() {
 			const currentContent = form.getValues('content') || '';
 			form.setValue(
 				'content',
-				`${currentContent}<p><img src="${payload.url}" alt="Obraz" /></p>`
+				`${currentContent}<p><img src="${payload.url}" alt="Obraz" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" /></p>`
 			);
 		} catch (uploadError) {
 			setError('Nie udało się przesłać zdjęcia');

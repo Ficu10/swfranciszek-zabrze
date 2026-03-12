@@ -65,6 +65,6 @@ export const uploadImageToDrive = async ({
 
 	return {
 		fileId,
-		url: `https://drive.google.com/uc?id=${fileId}`,
+		url: `https://drive.google.com/uc?export=view&id=${fileId}`,
 	};
 };
