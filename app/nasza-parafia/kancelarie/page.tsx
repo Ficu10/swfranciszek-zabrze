@@ -13,6 +13,7 @@ const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 interface FooterProps {
 	address: string;
 	officeHours: string;
+	massHours: string;
 	contactPhone: string;
 	contactEmail: string;
 	instagram: string;
@@ -32,8 +33,12 @@ export default function Kancelarie() {
 		const fetchKancelarieData = async () => {
 			try {
 				const data = await findFooterData();
-				setFooterData(data);
-				setEditValues(data);
+				const normalizedData: FooterProps = {
+					...data,
+					massHours: data.massHours ?? '',
+				};
+				setFooterData(normalizedData);
+				setEditValues(normalizedData);
 				setLoading(false);
 			} catch (error) {
 				console.error('Error fetching kancelarie data:', error);
