@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 interface FooterProps {
 	address: string;
 	officeHours: string;
+	massHours: string;
 	contactPhone: string;
 	contactEmail: string;
 	instagram: string;

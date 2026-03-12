@@ -58,6 +58,7 @@ model Footer {
   id          String   @id @default(cuid())
   address     String
   officeHours String
+  massHours   String   @default("")
   contactPhone String
   contactEmail String
   instagram   String
