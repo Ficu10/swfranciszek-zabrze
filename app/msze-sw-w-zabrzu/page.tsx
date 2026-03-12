@@ -92,7 +92,7 @@ export default function MszeSwWZabrzu() {
 						<hr className="w-full mb-7" />
 						<SafeHTML
 							content={mszeData.content}
-							className="flex flex-col max-w-fit w-[100ch] mb-14"
+							className="dangerouslySetInnerHTML flex flex-col w-full mb-14 overflow-x-auto"
 							fallback="Content loading..."
 						/>
 						<hr className="w-full my-7" />
