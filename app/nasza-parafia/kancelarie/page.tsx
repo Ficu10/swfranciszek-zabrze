@@ -6,6 +6,9 @@ import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import findFooterData from '@/actions/findFooterData';
 import saveFooterData from '@/actions/saveFooterData';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
+
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 interface FooterProps {
 	address: string;
@@ -41,12 +44,11 @@ export default function Kancelarie() {
 		fetchKancelarieData();
 	}, []);
 
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
+	const handleContentChange = (newContent: string) => {
 		setEditValues((prevEditValues) =>
-			prevEditValues ? { ...prevEditValues, [name]: value } : prevEditValues
+			prevEditValues
+				? { ...prevEditValues, officeHours: newContent }
+				: prevEditValues
 		);
 	};
 
@@ -83,73 +85,40 @@ export default function Kancelarie() {
 	const isAdmin = roles.some((role) => typeof role === 'string' && role === 'admin');
 
 	return (
-		<main className="flex min-h-screen flex-col items-center bg-white">
+		<main className="flex min-h-screen flex-col items-center justify-between bg-white relative overflow-hidden">
 			<MaxWidthWrapper className="flex flex-col items-center justify-center mt-7">
-				<hr className="w-full mb-7" />
-				<div className="flex flex-col max-w-fit w-[100ch] mb-14 gap-y-6">
-					<h1 className="text-3xl font-bold text-center">Kancelaria parafialna</h1>
-
-					<div>
-						<h2 className="text-xl font-semibold">Godziny urzędowania</h2>
-						{isEditing ? (
-							<textarea
-								name="officeHours"
-								value={editValues.officeHours}
-								onChange={handleChange}
-								className="w-full border p-2 rounded"
-								rows={8}
+				{isEditing ? (
+					<>
+						<div className="dangerouslySetInnerHTML">
+							<JoditEditor
+								value={editValues.officeHours || ''}
+								onChange={handleContentChange}
+								className="w-full p-4 border rounded min-h-screen"
 							/>
-						) : (
-							<div dangerouslySetInnerHTML={{ __html: footerData.officeHours }} />
-						)}
-					</div>
-
-					<div>
-						<h2 className="text-xl font-semibold">Kontakt</h2>
-						{isEditing ? (
-							<div className="flex flex-col gap-2 mt-2">
-								<input
-									name="contactPhone"
-									value={editValues.contactPhone}
-									onChange={handleChange}
-									className="w-full border p-2 rounded"
-								/>
-								<input
-									name="contactEmail"
-									value={editValues.contactEmail}
-									onChange={handleChange}
-									className="w-full border p-2 rounded"
-								/>
-							</div>
-						) : (
-							<>
-								<p>Telefon: {footerData.contactPhone}</p>
-								<p>Email: {footerData.contactEmail}</p>
-							</>
-						)}
-					</div>
-
-					<div>
-						<h2 className="text-xl font-semibold">Adres</h2>
-						{isEditing ? (
-							<textarea
-								name="address"
-								value={editValues.address}
-								onChange={handleChange}
-								className="w-full border p-2 rounded"
-								rows={4}
-							/>
-						) : (
-							<p className="whitespace-pre-line">{footerData.address}</p>
-						)}
-					</div>
+						</div>
+					</>
+				) : (
+					<>
+						<hr className="w-full mb-7" />
+						<div
+							className="dangerouslySetInnerHTML flex flex-col max-w-fit w-[100ch] mb-14"
+							dangerouslySetInnerHTML={{
+								__html: footerData.officeHours,
+							}}
+						></div>
+						<hr className="w-full my-7" />
+					</>
+				)}
 
 					{isAdmin && (
-						<div className="mt-4 flex gap-2">
+						<div className="mt-4 flex gap-2 my-7">
 							{isEditing ? (
 								<>
 									<Button onClick={handleSave}>Zapisz</Button>
-									<Button onClick={() => setIsEditing(false)} variant={'destructive'}>
+									<Button
+										onClick={() => setIsEditing(false)}
+										variant={'destructive'}
+									>
 										Odrzuć
 									</Button>
 								</>
@@ -158,8 +127,6 @@ export default function Kancelarie() {
 							)}
 						</div>
 					)}
-				</div>
-				<hr className="w-full mt-7" />
 			</MaxWidthWrapper>
 		</main>
 	);
