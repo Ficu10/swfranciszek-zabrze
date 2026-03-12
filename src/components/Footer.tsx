@@ -22,6 +22,7 @@ import { Input } from './ui/input';
 interface FooterProps {
 	address: string;
 	officeHours: string;
+	massHours: string;
 	contactPhone: string;
 	contactEmail: string;
 	instagram: string;
@@ -34,6 +35,8 @@ const DEFAULT_FOOTER_VALUES: FooterProps = {
 	address: 'Parafia św. Franciszka\nul. Wolności 446\n41-806 Zabrze',
 	officeHours:
 		'Poniedziałek: 8:00 - 9:00<br />Wtorek: 16:00 - 17:00<br />Środa: 8:00 - 9:00<br />Czwartek: 16:00 - 17:00<br />Piątek: 8:00 - 9:00',
+	massHours:
+		'Niedziela: 7:00, 8:30, 10:00, 11:30, 13:00, 18:00<br />Dni powszednie: 6:30, 8:00, 18:00',
 	contactPhone: '+48 32 271 31 52',
 	contactEmail: 'parafia@swfranciszekzabrze.pl',
 	instagram: '',
@@ -45,6 +48,7 @@ const DEFAULT_FOOTER_VALUES: FooterProps = {
 const getResolvedFooterData = (data: FooterProps): FooterProps => ({
 	address: data.address?.trim() || DEFAULT_FOOTER_VALUES.address,
 	officeHours: data.officeHours?.trim() || DEFAULT_FOOTER_VALUES.officeHours,
+	massHours: data.massHours?.trim() || DEFAULT_FOOTER_VALUES.massHours,
 	contactPhone: data.contactPhone?.trim() || DEFAULT_FOOTER_VALUES.contactPhone,
 	contactEmail: data.contactEmail?.trim() || DEFAULT_FOOTER_VALUES.contactEmail,
 	instagram: data.instagram?.trim() || DEFAULT_FOOTER_VALUES.instagram,
@@ -60,14 +64,14 @@ const Footer = () => {
 	const [editValues, setEditValues] = useState<FooterProps | null>(null);
 	const { data: session } = useSession();
 
-	const normalizeOfficeHoursForEditor = (value: string) =>
+	const normalizeHtmlLinesForEditor = (value: string) =>
 		value
 			.replace(/<br\s*\/?>/gi, '\n')
 			.replace(/<\/p>\s*<p>/gi, '\n')
 			.replace(/<[^>]*>/g, '')
 			.trim();
 
-	const formatOfficeHoursForHtml = (value: string) =>
+	const formatLinesForHtml = (value: string) =>
 		value
 			.split('\n')
 			.map((line) => line.trim())
@@ -82,7 +86,8 @@ const Footer = () => {
 				setFooterData(resolvedData);
 				setEditValues({
 					...resolvedData,
-					officeHours: normalizeOfficeHoursForEditor(resolvedData.officeHours),
+					officeHours: normalizeHtmlLinesForEditor(resolvedData.officeHours),
+					massHours: normalizeHtmlLinesForEditor(resolvedData.massHours),
 				});
 				setLoading(false);
 			} catch (error) {
@@ -91,9 +96,10 @@ const Footer = () => {
 				setFooterData(DEFAULT_FOOTER_VALUES);
 				setEditValues({
 					...DEFAULT_FOOTER_VALUES,
-					officeHours: normalizeOfficeHoursForEditor(
+					officeHours: normalizeHtmlLinesForEditor(
 						DEFAULT_FOOTER_VALUES.officeHours
 					),
+					massHours: normalizeHtmlLinesForEditor(DEFAULT_FOOTER_VALUES.massHours),
 				});
 			}
 		};
@@ -116,7 +122,8 @@ const Footer = () => {
 		try {
 			const payload = {
 				...editValues,
-				officeHours: formatOfficeHoursForHtml(editValues.officeHours),
+				officeHours: formatLinesForHtml(editValues.officeHours),
+				massHours: formatLinesForHtml(editValues.massHours),
 			};
 
 			const result = await saveFooterData(payload);
@@ -124,7 +131,8 @@ const Footer = () => {
 				setFooterData(payload);
 				setEditValues({
 					...payload,
-					officeHours: normalizeOfficeHoursForEditor(payload.officeHours),
+					officeHours: normalizeHtmlLinesForEditor(payload.officeHours),
+					massHours: normalizeHtmlLinesForEditor(payload.massHours),
 				});
 				setIsEditing(false);
 			} else {
@@ -154,7 +162,7 @@ const Footer = () => {
 	return (
 		<footer className="bg-slate-900 text-white p-6 pb-5 lg:p-10 lg:pb-5">
 			<MaxWidthWrapper>
-				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm">
+				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 text-sm">
 					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
 							<FaLocationDot className="text-2xl text-white" />
@@ -171,6 +179,17 @@ const Footer = () => {
 						<div
 							className="leading-relaxed text-gray-100"
 							dangerouslySetInnerHTML={{ __html: footerData.officeHours }}
+						/>
+					</div>
+
+					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
+						<div className="flex items-center gap-3">
+							<HiMiniBuildingOffice className="text-2xl text-white" />
+							<h4 className="text-xl font-bold text-white">Msze św.</h4>
+						</div>
+						<div
+							className="leading-relaxed text-gray-100"
+							dangerouslySetInnerHTML={{ __html: footerData.massHours }}
 						/>
 					</div>
 
@@ -229,6 +248,17 @@ const Footer = () => {
 								<textarea
 									name="officeHours"
 									value={editValues.officeHours}
+									onChange={handleChange}
+									rows={5}
+									className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-black"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Godziny Mszy św.</label>
+								<textarea
+									name="massHours"
+									value={editValues.massHours}
 									onChange={handleChange}
 									rows={5}
 									className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-black"
@@ -303,9 +333,10 @@ const Footer = () => {
 									setIsEditing(false);
 									setEditValues({
 										...footerData,
-										officeHours: normalizeOfficeHoursForEditor(
+										officeHours: normalizeHtmlLinesForEditor(
 											footerData.officeHours
 										),
+										massHours: normalizeHtmlLinesForEditor(footerData.massHours),
 									});
 								}}
 								variant="destructive"
