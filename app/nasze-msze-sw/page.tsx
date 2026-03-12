@@ -8,30 +8,30 @@ import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import { SafeHTML } from '@/components/SafeHTML';
 import { Button } from '@/components/ui/button';
 
-import findKancelariaData from '@/actions/findKancelariaData';
-import saveKancelariaData from '@/actions/saveKancelariaData';
+import findNaszeMszeSwData from '@/actions/findNaszeMszeSwData';
+import saveNaszeMszeSwData from '@/actions/saveNaszeMszeSwData';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
-interface KancelariaProps {
+interface NaszeMszeSwProps {
 	content: string;
 }
 
-export default function Kancelarie() {
-	const [data, setData] = useState<KancelariaProps | null>(null);
+export default function NaszeMszeSw() {
+	const [data, setData] = useState<NaszeMszeSwProps | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [isEditing, setIsEditing] = useState(false);
-	const [editValues, setEditValues] = useState<KancelariaProps | null>(null);
+	const [editValues, setEditValues] = useState<NaszeMszeSwProps | null>(null);
 	const { data: session } = useSession();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const result = await findKancelariaData();
+				const result = await findNaszeMszeSwData();
 				setData({ content: result.content });
 				setEditValues({ content: result.content });
 			} catch (error) {
-				console.error('Error fetching kancelaria data:', error);
+				console.error('Error fetching nasze msze data:', error);
 			} finally {
 				setLoading(false);
 			}
@@ -44,7 +44,7 @@ export default function Kancelarie() {
 		if (!editValues) return;
 
 		try {
-			const result = await saveKancelariaData(editValues);
+			const result = await saveNaszeMszeSwData(editValues);
 			if (result.success) {
 				setData(editValues);
 				setIsEditing(false);
@@ -52,7 +52,7 @@ export default function Kancelarie() {
 				alert('error' in result ? result.error : 'Failed to save changes');
 			}
 		} catch (error) {
-			console.error('Error saving kancelaria data:', error);
+			console.error('Error saving nasze msze data:', error);
 			alert('Failed to save changes');
 		}
 	};
@@ -62,7 +62,7 @@ export default function Kancelarie() {
 	}
 
 	if (!data) {
-		return <div>Error loading Kancelaria data</div>;
+		return <div>Error loading data</div>;
 	}
 
 	const isAdmin = session?.user?.role?.includes('admin');
