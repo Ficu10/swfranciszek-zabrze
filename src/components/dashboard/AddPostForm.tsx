@@ -62,7 +62,6 @@ export default function AddPostForm() {
 						message: (resp.error as string) ?? '',
 					};
 				},
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				defaultHandlerSuccess(this: any, data: { files: string[] }) {
 					(data.files || []).forEach((url: string) =>
 						this.s.insertImage(url)
