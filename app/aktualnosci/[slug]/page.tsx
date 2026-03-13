@@ -19,6 +19,10 @@ const normalizeDriveImageUrls = (content: string) => {
 		'src="/api/drive-image/$1"'
 	);
 
+	normalized = normalized
+		.replace(/(?:&nbsp;|\u00A0|\s)+$/g, '')
+		.replace(/(<\/(?:p|div|li|h[1-6]|span)>)(?:&nbsp;|\u00A0|\s)+/gi, '$1');
+
 	return normalized;
 };
 

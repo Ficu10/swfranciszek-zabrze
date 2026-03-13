@@ -35,6 +35,12 @@ const generateUniqueSlug = async (
 	}
 };
 
+const normalizePostContent = (rawContent: string) => {
+	return rawContent
+		.replace(/(?:&nbsp;|\u00A0|\s)+$/g, '')
+		.replace(/(<\/(?:p|div|li|h[1-6]|span)>)(?:&nbsp;|\u00A0|\s)+/gi, '$1');
+};
+
 export const editPost = async (
 	id: string,
 	values: z.infer<typeof PostSchema>
@@ -70,6 +76,7 @@ export const editPost = async (
 
 	const { title, content, category } = validatedFields.data;
 	const slug = await generateUniqueSlug(title, id);
+	const normalizedContent = normalizePostContent(content);
 
 	try {
 		await db.post.update({
@@ -79,7 +86,7 @@ export const editPost = async (
 			data: {
 				title,
 				slug,
-				content: content,
+				content: normalizedContent,
 				category: category,
 				author: `${firstname} ${lastname}`,
 			},

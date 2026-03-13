@@ -28,6 +28,12 @@ const generateUniqueSlug = async (title: string): Promise<string> => {
 	return candidate;
 };
 
+const normalizePostContent = (rawContent: string) => {
+	return rawContent
+		.replace(/(?:&nbsp;|\u00A0|\s)+$/g, '')
+		.replace(/(<\/(?:p|div|li|h[1-6]|span)>)(?:&nbsp;|\u00A0|\s)+/gi, '$1');
+};
+
 export const addPost = async (values: z.infer<typeof PostSchema>) => {
 	// Validating values with zod and PostSchema in schemas folder
 	const validatedFields = PostSchema.safeParse(values);
@@ -61,6 +67,7 @@ export const addPost = async (values: z.infer<typeof PostSchema>) => {
 
 	const { title, content, category } = validatedFields.data;
 	const slug = await generateUniqueSlug(title);
+	const normalizedContent = normalizePostContent(content);
 
 
 	try {
@@ -68,7 +75,7 @@ export const addPost = async (values: z.infer<typeof PostSchema>) => {
 			data: {
 				title,
 				slug,
-				content: content,
+				content: normalizedContent,
 				category: category,
 				author: `${firstname} ${lastname}`,
 			},
