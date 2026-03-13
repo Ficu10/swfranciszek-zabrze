@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useTransition, useState, type ChangeEvent } from 'react';
+import { useTransition, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import * as z from 'zod';
@@ -34,7 +34,6 @@ const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 export default function AddPostForm() {
 	const [isPending, startTransition] = useTransition();
-	const [isUploading, setIsUploading] = useState(false);
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const { data } = useSession();
@@ -48,63 +47,31 @@ export default function AddPostForm() {
 		},
 	});
 
-	const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) {
-			return;
-		}
-
-		setIsUploading(true);
-		setError('');
-
-		try {
-			const formData = new FormData();
-			formData.append('image', file);
-
-			const response = await fetch('/api/upload-image', {
-				method: 'POST',
-				body: formData,
-			});
-
-			if (!response.ok) {
-				if (response.status === 413) {
-					setError('Plik jest za duży dla serwera (max 4MB)');
-					return;
-				}
-
-				let message = 'Nie udało się przesłać zdjęcia';
-				const isJson = response.headers
-					.get('content-type')
-					?.includes('application/json');
-
-				if (isJson) {
-					const payload = await response.json();
-					message = payload.error ?? message;
-				}
-
-				setError(message);
-				return;
-			}
-
-			const payload = await response.json();
-
-			if (!payload.url) {
-				setError('Nie udało się przesłać zdjęcia');
-				return;
-			}
-
-			const currentContent = form.getValues('content') || '';
-			form.setValue(
-				'content',
-				`${currentContent}<p><img src="${payload.url}" alt="Obraz" style="max-width: 100%; height: auto; display: block; margin: 1rem 0;" /></p>`
-			);
-		} catch (uploadError) {
-			setError('Nie udało się przesłać zdjęcia');
-		} finally {
-			setIsUploading(false);
-			event.target.value = '';
-		}
-	};
+	const joditConfig = useMemo(
+		() => ({
+			uploader: {
+				url: '/api/upload-image',
+				fieldName: 'image',
+				format: 'json',
+				process(resp: Record<string, unknown>) {
+					return {
+						files: resp.url ? [resp.url as string] : [],
+						path: '',
+						baseurl: '',
+						error: resp.error ? 1 : 0,
+						message: (resp.error as string) ?? '',
+					};
+				},
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				defaultHandlerSuccess(this: any, data: { files: string[] }) {
+					(data.files || []).forEach((url: string) =>
+						this.s.insertImage(url)
+					);
+				},
+			},
+		}),
+		[]
+	);
 
 	const onSubmit = async (values: z.infer<typeof PostSchema>) => {
 		setError('');
@@ -141,7 +108,7 @@ export default function AddPostForm() {
 												<Input
 													placeholder="Np. Ogłoszenia na najbliższą niedzielę"
 													{...field}
-													disabled={isPending || isUploading}
+													disabled={isPending}
 													type="text"
 												/>
 											</FormControl>
@@ -178,34 +145,14 @@ export default function AddPostForm() {
 										)}
 									/>
 								</div>
-								<div className="flex flex-col gap-y-4">
-									<p className="text-sm">
-										Wgraj zdjęcie bezpośrednio do Google Drive, a system automatycznie
-										doda je do treści posta.
-									</p>
-									<div>
-										<label className="text-sm font-medium">Dodaj zdjęcie</label>
-										<Input
-											type="file"
-											accept="image/png,image/jpeg,image/webp,image/gif"
-											onChange={handleImageUpload}
-											disabled={isUploading || isPending}
-										/>
-										{isUploading && (
-											<p className="text-sm text-muted-foreground mt-1">
-												Wgrywam zdjęcie do Google Drive...
-											</p>
-										)}
-									</div>
-								</div>
-								<div className="dangerouslySetInnerHTML">
+																<div className="dangerouslySetInnerHTML">
 									<FormField
 										control={form.control}
 										name="content"
 										render={({ field }) => (
 											<FormItem className="mb-12">
 												<FormControl>
-													<JoditEditor {...field} />
+													<JoditEditor {...field} config={joditConfig} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -219,7 +166,7 @@ export default function AddPostForm() {
 							<Button
 								type="submit"
 								className="w-full mt-12"
-								disabled={isPending || isUploading}
+								disabled={isPending}
 							>
 								Dodaj post
 							</Button>
