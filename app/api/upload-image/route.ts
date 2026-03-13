@@ -17,9 +17,18 @@ export async function POST(request: Request) {
 		}
 
 		const formData = await request.formData();
-		const image = formData.get('image');
+		const imageFieldNames = ['image', 'files[0]', 'file', 'upload'];
+		let image = imageFieldNames
+			.map((fieldName) => formData.get(fieldName))
+			.find((value): value is File => value instanceof File);
 
-		if (!(image instanceof File)) {
+		if (!image) {
+			image = Array.from(formData.values()).find(
+				(value): value is File => value instanceof File
+			);
+		}
+
+		if (!image) {
 			return NextResponse.json(
 				{ error: 'Nie przesłano pliku' },
 				{ status: 400 }

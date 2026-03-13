@@ -92,8 +92,16 @@ export default function EditPostForm() {
 		() => ({
 			uploader: {
 				url: '/api/upload-image',
+				method: 'POST',
 				fieldName: 'image',
+				filesVariableName: () => 'image',
 				format: 'json',
+				isSuccess(resp: Record<string, unknown>) {
+					return Boolean(resp.url) && !resp.error;
+				},
+				getMessage(resp: Record<string, unknown>) {
+					return (resp.error as string) ?? '';
+				},
 				process(resp: Record<string, unknown>) {
 					return {
 						files: resp.url ? [resp.url as string] : [],
@@ -103,10 +111,11 @@ export default function EditPostForm() {
 						message: (resp.error as string) ?? '',
 					};
 				},
-				defaultHandlerSuccess(this: any, data: { files: string[] }) {
-					(data.files || []).forEach((url: string) =>
-						this.s.insertImage(url)
-					);
+				defaultHandlerSuccess(
+					this: { s: { insertImage: (url: string) => void } },
+					data: { files: string[] }
+				) {
+					(data.files || []).forEach((url: string) => this.s.insertImage(url));
 				},
 			},
 		}),
