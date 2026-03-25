@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import findFooterData from '@/actions/findFooterData';
 import saveFooterData from '@/actions/saveFooterData';
@@ -16,6 +14,7 @@ import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { IoMdMail, IoMdContact } from 'react-icons/io';
 import { useSession } from 'next-auth/react';
 import { BsBank } from 'react-icons/bs';
+import { SiBluetoothconnected } from 'react-icons/si';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
@@ -29,6 +28,9 @@ interface FooterProps {
 	twitter: string;
 	facebook: string;
 	youtube: string;
+	blikPhoneNumber: string;
+	bankAccountNumber: string;
+	bankAccountName: string;
 }
 
 const DEFAULT_FOOTER_VALUES: FooterProps = {
@@ -43,6 +45,9 @@ const DEFAULT_FOOTER_VALUES: FooterProps = {
 	twitter: 'https://x.com/franciszek_zab',
 	facebook: 'https://www.facebook.com/swfranciszekzabrze/?locale=pl_PL',
 	youtube: 'https://www.youtube.com/channel/UCsoJROoNWSobb5hoR6kQ0mQ',
+	blikPhoneNumber: '',
+	bankAccountNumber: '34-8454-1082-2006-0023-9628-0001',
+	bankAccountName: 'Orzesko - Knurowski Bank Spółdzielczy',
 };
 
 const getResolvedFooterData = (data: FooterProps): FooterProps => ({
@@ -55,6 +60,9 @@ const getResolvedFooterData = (data: FooterProps): FooterProps => ({
 	twitter: data.twitter?.trim() || DEFAULT_FOOTER_VALUES.twitter,
 	facebook: data.facebook?.trim() || DEFAULT_FOOTER_VALUES.facebook,
 	youtube: data.youtube?.trim() || DEFAULT_FOOTER_VALUES.youtube,
+	blikPhoneNumber: data.blikPhoneNumber?.trim() || DEFAULT_FOOTER_VALUES.blikPhoneNumber,
+	bankAccountNumber: data.bankAccountNumber?.trim() || DEFAULT_FOOTER_VALUES.bankAccountNumber,
+	bankAccountName: data.bankAccountName?.trim() || DEFAULT_FOOTER_VALUES.bankAccountName,
 });
 
 const Footer = () => {
@@ -213,12 +221,25 @@ const Footer = () => {
 					<div className="rounded-xl border border-white/20 bg-slate-900/40 p-5 space-y-3">
 						<div className="flex items-center gap-3">
 							<BsBank className="text-2xl text-white" />
-							<h4 className="text-xl font-bold text-white">Konto parafialne</h4>
+							<h4 className="text-xl font-bold text-white">Wpłaty</h4>
 						</div>
-						<div className="leading-relaxed text-gray-100">
-							Orzesko - Knurowski Bank Spółdzielczy
-							<br />
-							34-8454-1082-2006-0023-9628-0001
+						<div className="space-y-3 text-gray-100 text-sm">
+							{footerData.bankAccountNumber && (
+								<div className="pb-3 border-b border-white/20">
+									<p className="text-xs text-white/70 mb-1">Przesyłka tradycyjna</p>
+									<p className="font-semibold">{footerData.bankAccountName}</p>
+									<p className="break-all font-mono text-xs">{footerData.bankAccountNumber}</p>
+								</div>
+							)}
+							{footerData.blikPhoneNumber && (
+								<div>
+									<p className="text-xs text-white/70 mb-1">Szybki przesyłka (Blik)</p>
+									<p className="font-semibold flex items-center gap-2">
+										<SiBluetoothconnected className="text-lg" />
+										{footerData.blikPhoneNumber}
+									</p>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -324,7 +345,39 @@ const Footer = () => {
 									className="text-black"
 								/>
 							</div>
-						</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Blik - numer telefonu</label>
+								<Input
+									name="blikPhoneNumber"
+									value={editValues.blikPhoneNumber}
+									onChange={handleChange}
+									className="text-black"
+									placeholder="+48 123 456 789"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Konto bankowe - numer</label>
+								<Input
+									name="bankAccountNumber"
+									value={editValues.bankAccountNumber}
+									onChange={handleChange}
+									className="text-black"
+									placeholder="XX 0000 0000 0000 0000 0000 0000"
+								/>
+							</div>
+
+							<div className="space-y-2">
+								<label className="text-sm font-semibold">Konto bankowe - nazwa</label>
+								<Input
+									name="bankAccountName"
+									value={editValues.bankAccountName}
+									onChange={handleChange}
+									className="text-black"
+									placeholder="Nazwa banku"
+								/>
+							</div>
 
 						<div className="flex gap-2 pt-2">
 							<Button onClick={handleSave}>Zapisz</Button>

@@ -13,6 +13,9 @@ interface FooterProps {
 	twitter: string;
 	facebook: string;
 	youtube: string;
+	blikPhoneNumber: string;
+	bankAccountNumber: string;
+	bankAccountName: string;
 }
 
 // Function to handle saving footer data

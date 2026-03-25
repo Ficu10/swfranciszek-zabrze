@@ -20,6 +20,9 @@ async function findFooterData() {
 				twitter: '',
 				facebook: '',
 				youtube: '',
+				blikPhoneNumber: '',
+				bankAccountNumber: '',
+				bankAccountName: '',
 			},
 		});
 		return newFooter;

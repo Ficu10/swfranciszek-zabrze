@@ -65,6 +65,9 @@ model Footer {
   twitter     String
   facebook    String
   youtube     String
+  blikPhoneNumber String @default("")
+  bankAccountNumber String @default("")
+  bankAccountName String @default("")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
