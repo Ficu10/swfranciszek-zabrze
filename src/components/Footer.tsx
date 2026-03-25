@@ -16,7 +16,6 @@ import { HiMiniBuildingOffice } from 'react-icons/hi2';
 import { IoMdMail, IoMdContact } from 'react-icons/io';
 import { useSession } from 'next-auth/react';
 import { BsBank } from 'react-icons/bs';
-import { SiBluetoothconnected } from 'react-icons/si';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
@@ -235,9 +234,11 @@ const Footer = () => {
 							)}
 							{footerData.blikPhoneNumber && (
 								<div>
-									<p className="text-xs text-white/70 mb-1">Szybki przesyłka (Blik)</p>
+									<p className="text-xs text-white/70 mb-1">Szybka wpłata (BLIK)</p>
 									<p className="font-semibold flex items-center gap-2">
-										<SiBluetoothconnected className="text-lg" />
+										<span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-bold tracking-[0.2em] text-amber-300">
+											BLIK
+										</span>
 										{footerData.blikPhoneNumber}
 									</p>
 								</div>
