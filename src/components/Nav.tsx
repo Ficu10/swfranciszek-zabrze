@@ -114,12 +114,6 @@ const Nav: React.FC = () => {
 								>
 									Intencje mszalne
 								</Link>
-								<Link
-									href="/aktualnosci/nabozenstwa"
-									className="w-full text-center"
-								>
-									Nabożeństwa
-								</Link>
 							</div>
 						</PopoverContent>
 					</Popover>
@@ -252,10 +246,6 @@ const Nav: React.FC = () => {
 										<ListItem
 											title="Intencje mszalne"
 											href="/aktualnosci/intencje-mszalne"
-										/>
-										<ListItem
-											title="Nabożeństwa"
-											href="/aktualnosci/nabozenstwa"
 										/>
 									</ul>
 								</NavigationMenuContent>

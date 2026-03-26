@@ -12,19 +12,14 @@ interface SearchTopic {
 
 const TOPICS: SearchTopic[] = [
 	{
-		title: 'Intencje mszalne',
-		href: '/aktualnosci/intencje-mszalne',
-		keywords: ['intencje', 'mszalne', 'msza', 'aktualnosci'],
-	},
-	{
-		title: 'Nabożeństwa',
-		href: '/aktualnosci/nabozenstwa',
-		keywords: ['nabozenstwa', 'nabożeństwa', 'modlitwa'],
-	},
-	{
 		title: 'Ogłoszenia parafialne',
 		href: '/aktualnosci/ogloszenia-parafialne',
 		keywords: ['ogloszenia', 'ogłoszenia', 'aktualnosci'],
+	},
+	{
+		title: 'Intencje mszalne',
+		href: '/aktualnosci/intencje-mszalne',
+		keywords: ['intencje', 'mszalne', 'msza', 'aktualnosci'],
 	},
 	{
 		title: 'Nasze Msze św.',
@@ -65,6 +60,106 @@ const TOPICS: SearchTopic[] = [
 		title: 'Spowiedź',
 		href: '/posluga-duszpasterska/spowiedz',
 		keywords: ['spowiedz', 'spowiedź', 'konfesjonal'],
+	},
+	{
+		title: 'Podstawowe informacje',
+		href: '/nasza-parafia/podstawowe-informacje',
+		keywords: ['parafia', 'informacje'],
+	},
+	{
+		title: 'Kancelaria',
+		href: '/nasza-parafia/kancelarie',
+		keywords: ['kancelaria', 'biuro'],
+	},
+	{
+		title: 'Duszpasterze',
+		href: '/nasza-parafia/duszpasterze',
+		keywords: ['duszpasterze', 'ksieza', 'księża'],
+	},
+	{
+		title: 'Dzieci Maryi',
+		href: '/nasza-parafia/dzieci-maryi',
+		keywords: ['dzieci maryi', 'wspolnota'],
+	},
+	{
+		title: 'Ministranci',
+		href: '/nasza-parafia/ministranci',
+		keywords: ['ministranci', 'liturgia'],
+	},
+	{
+		title: 'Nasz patron',
+		href: '/nasza-parafia/nasz-patron',
+		keywords: ['patron', 'franciszek'],
+	},
+	{
+		title: 'Chór parafialny',
+		href: '/nasza-parafia/chor-parafialny',
+		keywords: ['chor', 'chór', 'spiew'],
+	},
+	{
+		title: 'Franciszkański zakon świeckich',
+		href: '/nasza-parafia/franciszkanski-zakon-swieckich',
+		keywords: ['zakon', 'franciszkanski', 'świeckich'],
+	},
+	{
+		title: 'Karmelitański zakon świeckich',
+		href: '/nasza-parafia/karmelitanski-zakon-swieckich',
+		keywords: ['zakon', 'karmelitanski', 'świeckich'],
+	},
+	{
+		title: 'Caritas',
+		href: '/nasza-parafia/caritas',
+		keywords: ['caritas', 'pomoc'],
+	},
+	{
+		title: 'Oaza - ruch, światło, życie',
+		href: '/nasza-parafia/oaza-ruch-swiatlo-zycie',
+		keywords: ['oaza', 'ruch swiatlo zycie', 'wspolnota'],
+	},
+	{
+		title: 'Różańcowe dzieło wspierania powołań',
+		href: '/nasza-parafia/rozancowe-dzielo-wspierania-powolan-decezji-gliwickiej',
+		keywords: ['rozancowe', 'powolania', 'różaniec'],
+	},
+	{
+		title: 'Róże różańcowe',
+		href: '/nasza-parafia/roze-rozancowe',
+		keywords: ['roze', 'róże', 'różaniec'],
+	},
+	{
+		title: 'Wspólnota zmartwychwstania',
+		href: '/nasza-parafia/wspolnota-zmartwychwstania',
+		keywords: ['wspolnota', 'zmartwychwstania'],
+	},
+	{
+		title: 'Spacer po kościele',
+		href: '/nasza-parafia/spacer-po-kosciele',
+		keywords: ['spacer', 'kosciol', 'kościół'],
+	},
+	{
+		title: 'Skrócone standardy ochrony dzieci',
+		href: '/Skrocone_standardy_ochrony_dzieci_w_parafiii_SW_Franciszka_w_Zabrzu.pdf',
+		keywords: ['ochrona dzieci', 'standardy', 'pdf'],
+	},
+	{
+		title: 'Standardy ochrony dzieci',
+		href: '/Standardy_ochrony_dzieci_w_parafiii_SW_Franciszka_w_Zabrzu.pdf',
+		keywords: ['ochrona dzieci', 'standardy', 'pdf'],
+	},
+	{
+		title: 'Zespół ds. prewencji',
+		href: '/Zespol_DS_prewencji_w_parafii_SW_Franciszka_w_Zabrzu.pdf',
+		keywords: ['ochrona dzieci', 'prewencja', 'pdf'],
+	},
+	{
+		title: 'Ochrona dzieci i młodzieży - diecezja gliwicka',
+		href: '/Ochrona_dzieci_i_mlodziezy_diecezja_gliwicka.pdf',
+		keywords: ['ochrona dzieci', 'mlodziez', 'pdf'],
+	},
+	{
+		title: 'Czytania na dziś',
+		href: 'https://opoka.org.pl/liturgia/',
+		keywords: ['czytania', 'liturgia', 'opoka'],
 	},
 	{
 		title: 'Cmentarz',
