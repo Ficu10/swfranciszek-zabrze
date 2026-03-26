@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const images = [
@@ -24,12 +25,16 @@ const BackgroundImage = () => {
 	return (
 		<div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900/50">
 			{images.map((imageUrl, imageIndex) => (
-				<div
+				<Image
 					key={imageUrl}
-					className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+					src={imageUrl}
+					alt="Tło parafii"
+					fill
+					sizes="100vw"
+					priority={imageIndex === 0}
+					className={`absolute inset-0 object-cover transition-opacity duration-1000 ${
 						imageIndex === currentImageIndex ? 'opacity-100' : 'opacity-0'
 					}`}
-					style={{ backgroundImage: `url('${imageUrl}')` }}
 				/>
 			))}
 
