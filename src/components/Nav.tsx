@@ -120,7 +120,7 @@ const Nav: React.FC = () => {
 					<Popover>
 						<PopoverTrigger asChild className="w-full">
 							<Button variant="outline" className="border-none w-full">
-								Posługa duszpasterska
+								Sakramenty i Pogrzeb
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="w-80">
@@ -256,7 +256,7 @@ const Nav: React.FC = () => {
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuTrigger className="w-full">
-									Posługa duszpasterska
+									Sakramenty i Pogrzeb
 								</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid w-[120px] gap-3 p-4 lg:w-[170px] lg:grid-cols-1 xl:w-[220px]">
