@@ -10,7 +10,7 @@ const images = [
 
 const BackgroundImage = () => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-	const [failedImages, setFailedImages] = useState<string[]>([]);
+	const [failedImageCount, setFailedImageCount] = useState(0);
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
@@ -24,23 +24,17 @@ const BackgroundImage = () => {
 
 	return (
 		<div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900/50">
-			{images.map((imageUrl, imageIndex) => (
-				<img
-					key={imageUrl}
-					src={imageUrl}
-					alt="Tło parafii"
-					onError={() => {
-						setFailedImages((previousFailedImages) =>
-							previousFailedImages.includes(imageUrl)
-								? previousFailedImages
-								: [...previousFailedImages, imageUrl]
-						);
-					}}
-					className={`absolute inset-0 object-cover transition-opacity duration-1000 ${
-						imageIndex === currentImageIndex ? 'opacity-100' : 'opacity-0'
-					}`}
-				/>
-			))}
+			<img
+				src={images[currentImageIndex]}
+				alt="Tło parafii"
+				onError={() => {
+					setFailedImageCount((previousValue) => previousValue + 1);
+					setCurrentImageIndex((previousIndex) =>
+						previousIndex === images.length - 1 ? 0 : previousIndex + 1
+					);
+				}}
+				className="h-full w-full object-cover"
+			/>
 
 			<div className="absolute inset-0 bg-black/25" />
 
@@ -50,9 +44,9 @@ const BackgroundImage = () => {
 				<h3 className="text-4xl">w Zabrzu</h3>
 			</div>
 
-			{failedImages.length > 0 && (
+			{failedImageCount > 0 && (
 				<div className="absolute bottom-3 left-3 z-20 rounded bg-red-700/90 px-3 py-2 text-xs text-white">
-					Błąd ładowania obrazów: {failedImages.length}
+					Błąd ładowania obrazu: {failedImageCount}
 				</div>
 			)}
 		</div>
