@@ -15,8 +15,20 @@ type LegacyFooterRow = {
 	youtube: string;
 };
 
+const LEGACY_CONTACT_EMAIL = 'parafia@swfranciszekzabrze.pl';
+const CURRENT_CONTACT_EMAIL = 'sf_zabrze@kuria.gliwice.pl';
+
+const normalizeContactEmail = (email: string) => {
+	if (email?.trim().toLowerCase() === LEGACY_CONTACT_EMAIL) {
+		return CURRENT_CONTACT_EMAIL;
+	}
+
+	return email;
+};
+
 const normalizeLegacyFooter = (footer: LegacyFooterRow) => ({
 	...footer,
+	contactEmail: normalizeContactEmail(footer.contactEmail),
 	blikPhoneNumber: '',
 	bankAccountNumber: '',
 	bankAccountName: '',
@@ -49,7 +61,10 @@ async function findFooterData() {
 			return newFooter;
 		}
 
-		return footerData;
+		return {
+			...footerData,
+			contactEmail: normalizeContactEmail(footerData.contactEmail),
+		};
 	} catch (error) {
 		const prismaError = error as { code?: string };
 
