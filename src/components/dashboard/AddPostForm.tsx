@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useTransition, useState, useMemo } from 'react';
+import { useTransition, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import * as z from 'zod';
@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { addPost } from '@/actions/addPost';
 import { PostSchema } from '@/schemas';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import {
 	Form,
@@ -37,6 +38,7 @@ export default function AddPostForm() {
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const { data } = useSession();
+	const joditConfig = useJoditConfig();
 
 	const form = useForm<z.infer<typeof PostSchema>>({
 		resolver: zodResolver(PostSchema),
@@ -46,40 +48,6 @@ export default function AddPostForm() {
 			author: `${data?.user.firstname ?? ''} ${data?.user.lastname ?? ''}`.trim(),
 		},
 	});
-
-	const joditConfig = useMemo(
-		() => ({
-			uploader: {
-				url: '/api/upload-image',
-				method: 'POST',
-				fieldName: 'image',
-				filesVariableName: () => 'image',
-				format: 'json',
-				isSuccess(resp: Record<string, unknown>) {
-					return Boolean(resp.url) && !resp.error;
-				},
-				getMessage(resp: Record<string, unknown>) {
-					return (resp.error as string) ?? '';
-				},
-				process(resp: Record<string, unknown>) {
-					return {
-						files: resp.url ? [resp.url as string] : [],
-						path: '',
-						baseurl: '',
-						error: resp.error ? 1 : 0,
-						message: (resp.error as string) ?? '',
-					};
-				},
-				defaultHandlerSuccess(
-					this: { s: { insertImage: (url: string) => void } },
-					data: { files: string[] }
-				) {
-					(data.files || []).forEach((url: string) => this.s.insertImage(url));
-				},
-			},
-		}),
-		[]
-	);
 
 	const onSubmit = async (values: z.infer<typeof PostSchema>) => {
 		setError('');

@@ -2,7 +2,7 @@
 
 // Functions
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useTransition } from 'react';
@@ -47,12 +47,14 @@ import FormSuccess from '@/components/FormSuccess';
 import { Input } from '@/components/ui/input';
 
 import { Button } from '@/components/ui/button';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 export default function EditPostForm() {
 	const [isPending, startTransition] = useTransition();
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	const form = useForm<z.infer<typeof PostSchema>>({
 		resolver: zodResolver(PostSchema),
@@ -82,45 +84,11 @@ export default function EditPostForm() {
 					}
 				})
 				.catch((error) => {
-					setError('B\u0142\u0105d przy pobieraniu danych z bazy danych');
+					setError('Błąd przy pobieraniu danych z bazy danych');
 					throw error;
 				});
 		}
 	}, [form, postId]);
-
-	const joditConfig = useMemo(
-		() => ({
-			uploader: {
-				url: '/api/upload-image',
-				method: 'POST',
-				fieldName: 'image',
-				filesVariableName: () => 'image',
-				format: 'json',
-				isSuccess(resp: Record<string, unknown>) {
-					return Boolean(resp.url) && !resp.error;
-				},
-				getMessage(resp: Record<string, unknown>) {
-					return (resp.error as string) ?? '';
-				},
-				process(resp: Record<string, unknown>) {
-					return {
-						files: resp.url ? [resp.url as string] : [],
-						path: '',
-						baseurl: '',
-						error: resp.error ? 1 : 0,
-						message: (resp.error as string) ?? '',
-					};
-				},
-				defaultHandlerSuccess(
-					this: { s: { insertImage: (url: string) => void } },
-					data: { files: string[] }
-				) {
-					(data.files || []).forEach((url: string) => this.s.insertImage(url));
-				},
-			},
-		}),
-		[]
-	);
 
 	const onSubmit = async (values: z.infer<typeof PostSchema>) => {
 		setError('');
