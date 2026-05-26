@@ -24,6 +24,15 @@ const nextConfig = {
 		}
 		return config;
 	},
+	async redirects() {
+		return [
+			{
+				source: '/index.php/:path*',
+				destination: '/:path*',
+				permanent: true,
+			},
+		];
+	},
 	async headers() {
 		return [
 			{
