@@ -26,18 +26,12 @@ const BackgroundImage = () => {
 					key={src}
 					src={src}
 					alt="Tło parafii"
-					className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out"
+					className="absolute inset-0 z-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out"
 					style={{ opacity: index === currentImageIndex ? 1 : 0 }}
 				/>
 			))}
 
-			<div className="absolute inset-0 bg-black/30" />
-
-			<div className="absolute top-1/2 left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center gap-y-5 rounded-xl bg-slate-800/50 p-10 text-center text-white">
-				<h2 className="text-6xl">Parafia św. Franciszka</h2>
-				<hr className="w-1/2" />
-				<h3 className="text-4xl">w Zabrzu</h3>
-			</div>
+			<div className="absolute inset-0 z-10 bg-black/30" />
 		</div>
 	);
 };

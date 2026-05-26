@@ -41,7 +41,7 @@ const DEFAULT_FOOTER_VALUES: FooterProps = {
 	massHours:
 		'Niedziela: 7:00, 8:30, 10:00, 11:30, 13:00, 18:00<br />Dni powszednie: 6:30, 8:00, 18:00',
 	contactPhone: '+48 32 271 31 52',
-	contactEmail: 'parafia@swfranciszekzabrze.pl',
+	contactEmail: 'sf_zabrze@kuria.gliwice.pl',
 	instagram: '',
 	twitter: 'https://x.com/franciszek_zab',
 	facebook: 'https://www.facebook.com/swfranciszekzabrze/?locale=pl_PL',
