@@ -4,6 +4,7 @@ import { FaYoutube } from 'react-icons/fa';
 
 import Nav from './Nav';
 import TopicSearch from './TopicSearch';
+import VisitorCounter from './VisitorCounter';
 
 const Header = () => {
 	return (
@@ -13,6 +14,7 @@ const Header = () => {
 					<div className="flex-1">
 						<TopicSearch />
 					</div>
+					<VisitorCounter />
 					<Link
 						href="https://www.youtube.com/watch?v=Q9MVF5YlDBU"
 						target="_blank"

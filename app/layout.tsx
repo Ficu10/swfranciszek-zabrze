@@ -20,6 +20,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Provider from '@/components/Provider';
+import VisitTracker from '@/components/VisitTracker';
 
 export const metadata: Metadata = {
 	title: 'Kościół św. Franciszka w Zabrzu',
@@ -44,6 +45,7 @@ export default function RootLayout({
 				)}
 			>
 				<Provider>
+					<VisitTracker />
 					<Header />
 					<div className="flex-grow flex-1">{children}</div>
 					<Footer />
