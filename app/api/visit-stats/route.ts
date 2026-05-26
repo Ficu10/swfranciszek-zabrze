@@ -5,6 +5,27 @@ import { isAdmin } from '@/lib/permissions';
 
 export const runtime = 'nodejs';
 
+const isMissingPageVisitTableError = (error: unknown) => {
+	if (
+		typeof error === 'object' &&
+		error !== null &&
+		'code' in error &&
+		(error as { code?: string }).code === 'P2021'
+	) {
+		return true;
+	}
+
+	if (
+		error instanceof Error &&
+		error.message.includes('PageVisit') &&
+		error.message.includes('does not exist')
+	) {
+		return true;
+	}
+
+	return false;
+};
+
 export async function GET(request: Request) {
 	try {
 		const session = await auth();
@@ -120,6 +141,18 @@ export async function GET(request: Request) {
 
 		return NextResponse.json({ todayCount, chartData });
 	} catch (error) {
+		if (isMissingPageVisitTableError(error)) {
+			return NextResponse.json(
+				{
+					todayCount: 0,
+					chartData: [],
+					degraded: true,
+					message: 'Tabela statystyk odwiedzin nie jest jeszcze gotowa',
+				},
+				{ status: 200 }
+			);
+		}
+
 		console.error('Visit stats error:', error);
 		return NextResponse.json({ error: 'Błąd serwera' }, { status: 500 });
 	}
