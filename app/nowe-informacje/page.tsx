@@ -12,6 +12,7 @@ import findNoweInformacjeData from '@/actions/findNoweInformacjeData';
 import saveNoweInformacjeData from '@/actions/saveNoweInformacjeData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -28,6 +29,7 @@ export default function NoweInformacje() {
 		null
 	);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchNoweInformacje = async () => {
@@ -95,6 +97,7 @@ export default function NoweInformacje() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

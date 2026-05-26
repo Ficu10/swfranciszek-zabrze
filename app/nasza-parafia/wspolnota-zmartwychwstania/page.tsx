@@ -12,6 +12,7 @@ import findWspolnotaZmartwychwstaniaData from '@/actions/findWspolnotaZmartwychw
 import saveWspolnotaZmartwychwstaniaData from '@/actions/saveWspolnotaZmartwychwstaniaData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -27,6 +28,7 @@ export default function WspolnotaZmartwychwstania() {
 	const [editValues, setEditValues] =
 		useState<WspolnotaZmartwychwstaniaProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchWspolnotaZmartwychwstania = async () => {
@@ -96,6 +98,7 @@ export default function WspolnotaZmartwychwstania() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

@@ -12,6 +12,7 @@ import findPogrzebData from '@/actions/findPogrzebData';
 import savePogrzebData from '@/actions/savePogrzebData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -25,6 +26,7 @@ export default function Pogrzeb() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<PogrzebProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchPogrzeb = async () => {
@@ -92,6 +94,7 @@ export default function Pogrzeb() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

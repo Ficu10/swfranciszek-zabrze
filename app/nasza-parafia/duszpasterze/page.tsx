@@ -12,6 +12,7 @@ import findDuszpasterzeData from '@/actions/findDuszpasterzeData';
 import saveDuszpasterzeData from '@/actions/saveDuszpasterzeData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -27,6 +28,7 @@ export default function Duszpasterze() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<DuszpasterzeProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchDuszpasterze = async () => {
@@ -86,6 +88,7 @@ export default function Duszpasterze() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

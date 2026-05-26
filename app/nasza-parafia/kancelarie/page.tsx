@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 
 import findKancelariaData from '@/actions/findKancelariaData';
 import saveKancelariaData from '@/actions/saveKancelariaData';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -23,6 +24,7 @@ export default function Kancelarie() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<KancelariaProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -75,6 +77,7 @@ export default function Kancelarie() {
 						<JoditEditor
 							value={editValues?.content || ''}
 							onChange={(newContent) => setEditValues({ content: newContent })}
+							config={joditConfig}
 							className="w-full p-4 border rounded min-h-screen"
 						/>
 					</div>

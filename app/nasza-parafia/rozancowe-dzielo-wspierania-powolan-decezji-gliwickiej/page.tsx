@@ -12,6 +12,7 @@ import findRozancoweDzieloData from '@/actions/findRozancoweDzieloData';
 import saveRozancoweDzieloData from '@/actions/saveRozancoweDzieloData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -28,6 +29,7 @@ export default function RozancoweDzielo() {
 		null
 	);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchRozancoweDzielo = async () => {
@@ -96,6 +98,7 @@ export default function RozancoweDzielo() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

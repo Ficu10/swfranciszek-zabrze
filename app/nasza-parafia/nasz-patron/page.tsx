@@ -12,6 +12,7 @@ import findNaszPatronData from '@/actions/findNaszPatronData';
 import saveNaszPatronData from '@/actions/saveNaszPatronData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -25,6 +26,7 @@ export default function NaszPatron() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<NaszPatronProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchNaszPatron = async () => {
@@ -84,6 +86,7 @@ export default function NaszPatron() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

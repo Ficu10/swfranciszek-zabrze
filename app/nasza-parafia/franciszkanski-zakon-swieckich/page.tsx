@@ -12,6 +12,7 @@ import findFranciszkanskiZakonSwieckichData from '@/actions/findFranciszkanskiZa
 import saveFranciszkanskiZakonSwieckichData from '@/actions/saveFranciszkanskiZakonSwieckichData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -27,6 +28,7 @@ export default function FranciszkanskiZakonSwieckich() {
 	const [editValues, setEditValues] =
 		useState<FranciszkanskiZakonSwieckichProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchFranciszkanskiZakonSwieckich = async () => {
@@ -99,6 +101,7 @@ export default function FranciszkanskiZakonSwieckich() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

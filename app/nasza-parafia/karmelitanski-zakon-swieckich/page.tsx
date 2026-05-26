@@ -12,6 +12,7 @@ import findKarmelitanskiZakonSwieckichData from '@/actions/findKarmelitanskiZako
 import saveKarmelitanskiZakonSwieckichData from '@/actions/saveKarmelitanskiZakonSwieckichData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -27,6 +28,7 @@ export default function KarmelitanskiZakonSwieckich() {
 	const [editValues, setEditValues] =
 		useState<KarmelitanskiZakonSwieckichProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchKarmelitanskiZakonSwieckich = async () => {
@@ -98,6 +100,7 @@ export default function KarmelitanskiZakonSwieckich() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 

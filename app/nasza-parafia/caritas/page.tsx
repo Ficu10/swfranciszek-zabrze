@@ -12,6 +12,7 @@ import findCaritasData from '@/actions/findCaritasData';
 import saveCaritasData from '@/actions/saveCaritasData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 

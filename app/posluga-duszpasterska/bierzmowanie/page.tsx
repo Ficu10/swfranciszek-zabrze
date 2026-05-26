@@ -12,6 +12,7 @@ import findBierzmowanieData from '@/actions/findBierzmowanieData';
 import saveBierzmowanieData from '@/actions/saveBierzmowanieData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -27,6 +28,7 @@ export default function Bierzmowanie() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<BierzmowanieProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchBierzmowanie = async () => {
@@ -94,6 +96,7 @@ export default function Bierzmowanie() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

@@ -12,6 +12,7 @@ import findDzieciMaryiData from '@/actions/findDzieciMaryiData';
 import saveDzieciMaryiData from '@/actions/saveDzieciMaryiData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 

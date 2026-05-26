@@ -12,6 +12,7 @@ import findSpowiedzData from '@/actions/findSpowiedzData';
 import saveSpowiedzData from '@/actions/saveSpowiedzData';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -25,6 +26,7 @@ export default function Spowiedz() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<SpowiedzProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchSpowiedz = async () => {
@@ -92,6 +94,7 @@ export default function Spowiedz() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>
