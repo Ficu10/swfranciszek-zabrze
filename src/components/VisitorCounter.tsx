@@ -39,10 +39,9 @@ export default function VisitorCounter() {
 
 	const isAdmin = session?.user?.role?.includes('admin');
 
-	// Fetch just today's count for the badge
-	useEffect(() => {
+	const fetchTodayCount = useCallback(() => {
 		if (!isAdmin) return;
-		fetch('/api/visit-stats?range=1d')
+		fetch('/api/visit-stats?range=1d', { cache: 'no-store' })
 			.then((r) => r.json())
 			.then((d) => setTodayCount(d.todayCount ?? 0))
 			.catch(() => setTodayCount(0));
@@ -52,7 +51,7 @@ export default function VisitorCounter() {
 		(r: Range) => {
 			if (!isAdmin) return;
 			setLoading(true);
-			fetch(`/api/visit-stats?range=${r}`)
+			fetch(`/api/visit-stats?range=${r}`, { cache: 'no-store' })
 				.then((res) => res.json())
 				.then((d) => {
 					setChartData(d.chartData ?? []);
@@ -64,9 +63,30 @@ export default function VisitorCounter() {
 		[isAdmin]
 	);
 
+	// Initial badge count + auto refresh every 30 seconds
+	useEffect(() => {
+		if (!isAdmin) return;
+
+		fetchTodayCount();
+		const intervalId = setInterval(fetchTodayCount, 30000);
+
+		return () => clearInterval(intervalId);
+	}, [isAdmin, fetchTodayCount]);
+
 	useEffect(() => {
 		if (open) fetchStats(range);
 	}, [open, range, fetchStats]);
+
+	// Auto refresh chart while popover is open
+	useEffect(() => {
+		if (!open || !isAdmin) return;
+
+		const intervalId = setInterval(() => {
+			fetchStats(range);
+		}, 30000);
+
+		return () => clearInterval(intervalId);
+	}, [open, range, isAdmin, fetchStats]);
 
 	if (!isAdmin) return null;
 
