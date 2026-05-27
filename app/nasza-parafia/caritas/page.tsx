@@ -26,6 +26,7 @@ export default function Caritas() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<CaritasProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchCaritas = async () => {
@@ -93,6 +94,7 @@ export default function Caritas() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

@@ -26,6 +26,7 @@ export default function DzieciMaryi() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<DzieciMaryiProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchDzieciMaryi = async () => {
@@ -94,6 +95,7 @@ export default function DzieciMaryi() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

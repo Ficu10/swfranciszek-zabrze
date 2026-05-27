@@ -27,6 +27,7 @@ export default function Ministranci() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<MinistranciProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchMinistranci = async () => {
@@ -94,6 +95,7 @@ export default function Ministranci() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

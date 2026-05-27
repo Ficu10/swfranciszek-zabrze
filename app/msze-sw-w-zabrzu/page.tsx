@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import { SafeHTML } from '@/components/SafeHTML';
 import { Button } from '@/components/ui/button';
+import { useJoditConfig } from '@/hooks/useJoditConfig';
 
 import findMszeSwWZabrzuData from '@/actions/findMszeSwWZabrzuData';
 import saveMszeSwWZabrzuData from '@/actions/saveMszeSwWZabrzuData';
@@ -23,6 +24,7 @@ export default function MszeSwWZabrzu() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValues, setEditValues] = useState<MszeSwWZabrzuProps | null>(null);
 	const { data: session } = useSession();
+	const joditConfig = useJoditConfig();
 
 	useEffect(() => {
 		const fetchMszeData = async () => {
@@ -83,6 +85,7 @@ export default function MszeSwWZabrzu() {
 							<JoditEditor
 								value={editValues?.content || ''}
 								onChange={handleContentChange}
+								config={joditConfig}
 								className="w-full p-4 border rounded min-h-screen"
 							/>
 						</div>

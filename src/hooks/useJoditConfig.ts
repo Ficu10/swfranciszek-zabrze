@@ -30,6 +30,19 @@ export const useJoditConfig = () => {
 				) {
 					(data.files || []).forEach((url: string) => this.s.insertImage(url));
 				},
+				defaultHandlerError(
+					this: unknown,
+					error: { message?: string } | string
+				) {
+					const message =
+						typeof error === 'string'
+							? error
+							: error?.message || 'Nie udało się przesłać zdjęcia';
+
+					if (typeof window !== 'undefined') {
+						window.alert(message);
+					}
+				},
 			},
 		}),
 		[]
