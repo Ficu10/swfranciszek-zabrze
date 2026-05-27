@@ -1,15 +1,18 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+
+const VISIT_SESSION_KEY = 'sfz-visit-tracked';
 
 export default function VisitTracker() {
 	const pathname = usePathname();
-	const tracked = useRef<Set<string>>(new Set());
 
 	useEffect(() => {
-		if (tracked.current.has(pathname)) return;
-		tracked.current.add(pathname);
+		const alreadyTracked = sessionStorage.getItem(VISIT_SESSION_KEY) === '1';
+		if (alreadyTracked) return;
+
+		sessionStorage.setItem(VISIT_SESSION_KEY, '1');
 
 		fetch('/api/track-visit', {
 			method: 'POST',
