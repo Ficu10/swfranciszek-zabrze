@@ -3,7 +3,8 @@ import { useMemo } from 'react';
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
 const normalizeUploadErrorMessage = (rawMessage?: string) => {
-	const fallback = 'Nie udało się przesłać zdjęcia.';
+	const sizeMessage = 'Zdjęcie jest za duże. Maksymalny rozmiar to 4 MB.';
+	const fallback = sizeMessage;
 	if (!rawMessage) return fallback;
 
 	const lower = rawMessage.toLowerCase();
@@ -12,9 +13,11 @@ const normalizeUploadErrorMessage = (rawMessage?: string) => {
 		lower.includes('payload') ||
 		lower.includes('too large') ||
 		lower.includes('za duży') ||
-		lower.includes('za duze')
+		lower.includes('za duze') ||
+		lower.includes('nie udało się przesłać zdjęcia') ||
+		lower.includes('nie udalo sie przeslac zdjecia')
 	) {
-		return 'Zdjęcie jest za duże. Maksymalny rozmiar to 4 MB.';
+		return sizeMessage;
 	}
 
 	return rawMessage;
