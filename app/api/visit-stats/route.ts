@@ -2,29 +2,12 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth/auth';
 import { db } from '@/lib/db';
 import { isAdmin } from '@/lib/permissions';
+import {
+	ensurePageVisitTable,
+	isMissingPageVisitTableError,
+} from '@/lib/page-visit-table';
 
 export const runtime = 'nodejs';
-
-const isMissingPageVisitTableError = (error: unknown) => {
-	if (
-		typeof error === 'object' &&
-		error !== null &&
-		'code' in error &&
-		(error as { code?: string }).code === 'P2021'
-	) {
-		return true;
-	}
-
-	if (
-		error instanceof Error &&
-		error.message.includes('PageVisit') &&
-		error.message.includes('does not exist')
-	) {
-		return true;
-	}
-
-	return false;
-};
 
 export async function GET(request: Request) {
 	try {
@@ -67,13 +50,23 @@ export async function GET(request: Request) {
 				startDate.setHours(0, 0, 0, 0);
 		}
 
-		const visits = await db.pageVisit.findMany({
-			where: {
-				visitedAt: { gte: startDate },
-			},
-			select: { visitedAt: true },
-			orderBy: { visitedAt: 'asc' },
-		});
+		let visits: { visitedAt: Date }[] = [];
+		try {
+			visits = await db.pageVisit.findMany({
+				where: {
+					visitedAt: { gte: startDate },
+				},
+				select: { visitedAt: true },
+				orderBy: { visitedAt: 'asc' },
+			});
+		} catch (error) {
+			if (!isMissingPageVisitTableError(error)) {
+				throw error;
+			}
+
+			await ensurePageVisitTable();
+			visits = [];
+		}
 
 		// Today's count
 		const todayStart = new Date();
