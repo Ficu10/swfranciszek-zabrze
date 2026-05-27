@@ -6,6 +6,28 @@ export const useJoditConfig = () => {
 			uploader: {
 				url: '/api/upload-image',
 				method: 'POST',
+				beforeUpload: (files: File[] | FileList) => {
+					const maxFileSize = 4 * 1024 * 1024;
+					const normalizedFiles = Array.isArray(files)
+						? files
+						: Array.from(files || []);
+
+					const tooLargeFile = normalizedFiles.find(
+						(file) => file.size > maxFileSize
+					);
+
+					if (!tooLargeFile) {
+						return true;
+					}
+
+					if (typeof window !== 'undefined') {
+						window.alert(
+							`Zdjęcie "${tooLargeFile.name}" jest za duże. Maksymalny rozmiar to 4 MB.`
+						);
+					}
+
+					return false;
+				},
 				fieldName: 'image',
 				filesVariableName: () => 'image',
 				format: 'json',
