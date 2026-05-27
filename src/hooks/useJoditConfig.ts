@@ -1,5 +1,25 @@
 import { useMemo } from 'react';
 
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
+
+const normalizeUploadErrorMessage = (rawMessage?: string) => {
+	const fallback = 'Nie udało się przesłać zdjęcia.';
+	if (!rawMessage) return fallback;
+
+	const lower = rawMessage.toLowerCase();
+	if (
+		lower.includes('413') ||
+		lower.includes('payload') ||
+		lower.includes('too large') ||
+		lower.includes('za duży') ||
+		lower.includes('za duze')
+	) {
+		return 'Zdjęcie jest za duże. Maksymalny rozmiar to 4 MB.';
+	}
+
+	return rawMessage;
+};
+
 export const useJoditConfig = () => {
 	return useMemo(
 		() => ({
@@ -7,13 +27,12 @@ export const useJoditConfig = () => {
 				url: '/api/upload-image',
 				method: 'POST',
 				beforeUpload: (files: File[] | FileList) => {
-					const maxFileSize = 4 * 1024 * 1024;
 					const normalizedFiles = Array.isArray(files)
 						? files
 						: Array.from(files || []);
 
 					const tooLargeFile = normalizedFiles.find(
-						(file) => file.size > maxFileSize
+						(file) => typeof file?.size === 'number' && file.size > MAX_IMAGE_SIZE
 					);
 
 					if (!tooLargeFile) {
@@ -31,19 +50,43 @@ export const useJoditConfig = () => {
 				fieldName: 'image',
 				filesVariableName: () => 'image',
 				format: 'json',
-				isSuccess(resp: Record<string, unknown>) {
-					return Boolean(resp.url) && !resp.error;
+				isSuccess(resp: Record<string, unknown> | string) {
+					if (typeof resp === 'string') {
+						return false;
+					}
+
+					return Boolean(resp?.url) && !resp?.error;
 				},
-				getMessage(resp: Record<string, unknown>) {
-					return (resp.error as string) ?? '';
+				getMessage(resp: Record<string, unknown> | string) {
+					if (typeof resp === 'string') {
+						return normalizeUploadErrorMessage(resp);
+					}
+
+					return normalizeUploadErrorMessage((resp?.error as string) ?? '');
 				},
-				process(resp: Record<string, unknown>) {
+				process(resp: Record<string, unknown> | string) {
+					if (typeof resp === 'string') {
+						const message = normalizeUploadErrorMessage(resp);
+
+						return {
+							files: [],
+							path: '',
+							baseurl: '',
+							error: 1,
+							message,
+						};
+					}
+
+					const message = normalizeUploadErrorMessage(
+						(resp?.error as string) ?? ''
+					);
+
 					return {
-						files: resp.url ? [resp.url as string] : [],
+						files: resp?.url ? [resp.url as string] : [],
 						path: '',
 						baseurl: '',
-						error: resp.error ? 1 : 0,
-						message: (resp.error as string) ?? '',
+						error: resp?.error ? 1 : 0,
+						message,
 					};
 				},
 				defaultHandlerSuccess(
@@ -56,10 +99,11 @@ export const useJoditConfig = () => {
 					this: unknown,
 					error: { message?: string } | string
 				) {
-					const message =
+					const rawMessage =
 						typeof error === 'string'
 							? error
 							: error?.message || 'Nie udało się przesłać zdjęcia';
+					const message = normalizeUploadErrorMessage(rawMessage);
 
 					if (typeof window !== 'undefined') {
 						window.alert(message);
