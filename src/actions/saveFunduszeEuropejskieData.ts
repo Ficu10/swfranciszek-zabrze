@@ -2,7 +2,7 @@
 
 import { db } from '@/lib/db';
 import {
-	requireAdmin,
+	requireAdminOrModerator,
 	createErrorResponse,
 	createSuccessResponse,
 } from '@/lib/auth-utils';
@@ -14,7 +14,7 @@ interface FunduszeEuropejskieProps {
 
 const saveFunduszeEuropejskieData = async (data: FunduszeEuropejskieProps) => {
 	try {
-		await requireAdmin();
+		await requireAdminOrModerator();
 
 		const sanitizedContent = await sanitizeHtml(data.content);
 		const existing = await db.funduszeEuropejskie.findFirst({

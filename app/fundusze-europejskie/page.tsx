@@ -67,7 +67,13 @@ export default function FunduszeEuropejskie() {
 		return <div>Error loading data</div>;
 	}
 
-	const isAdmin = session?.user?.role?.includes('admin');
+	const roles = Array.isArray(session?.user?.role)
+		? session.user.role
+		: [(session?.user?.role as string | undefined)?.toString()];
+
+	const hasRole = roles.some(
+		(role) => typeof role === 'string' && ['admin', 'moderator'].includes(role)
+	);
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between bg-white relative overflow-hidden">
@@ -93,7 +99,7 @@ export default function FunduszeEuropejskie() {
 					</>
 				)}
 
-				{isAdmin && (
+				{hasRole && (
 					<div className="mt-4 flex gap-2 my-7">
 						{isEditing ? (
 							<>
