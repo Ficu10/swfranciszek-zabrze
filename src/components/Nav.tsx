@@ -50,6 +50,7 @@ const Nav: React.FC = () => {
 		},
 		{ title: 'Kancelaria', href: '/nasza-parafia/kancelarie' },
 		{ title: 'Duszpasterze', href: '/nasza-parafia/duszpasterze' },
+		{ title: 'Dawni Duszpasterze', href: '/nasza-parafia/dawni-duszpasterze' },
 		{ title: 'Dzieci Maryi', href: '/nasza-parafia/dzieci-maryi' },
 		{ title: 'Ministranci', href: '/nasza-parafia/ministranci' },
 		{ title: 'Nasz patron', href: '/nasza-parafia/nasz-patron' },
