@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
+import { ensureFunduszeEuropejskieTable } from '@/lib/fundusze-europejskie-table';
 import {
 	requireAdminOrModerator,
 	createErrorResponse,
@@ -15,6 +16,7 @@ interface FunduszeEuropejskieProps {
 const saveFunduszeEuropejskieData = async (data: FunduszeEuropejskieProps) => {
 	try {
 		await requireAdminOrModerator();
+		await ensureFunduszeEuropejskieTable();
 
 		const sanitizedContent = await sanitizeHtml(data.content);
 		const existing = await db.funduszeEuropejskie.findFirst({

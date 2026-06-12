@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
+import { ensureFunduszeEuropejskieTable } from '@/lib/fundusze-europejskie-table';
 
 const defaultContent = `<h1>Fundusze Europejskie</h1>
 
@@ -45,6 +46,8 @@ const defaultContent = `<h1>Fundusze Europejskie</h1>
 <p>#FunduszeUE #FunduszeEuropejskie</p>`;
 
 async function findFunduszeEuropejskieData() {
+	await ensureFunduszeEuropejskieTable();
+
 	const existing = await db.funduszeEuropejskie.findFirst({
 		orderBy: { createdAt: 'asc' },
 	});
