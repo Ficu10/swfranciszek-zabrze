@@ -222,6 +222,7 @@ const Nav: React.FC = () => {
 					<Link href="/cmentarz" className="w-full text-center">
 						<MenuItem className="w-full">Cmentarz</MenuItem>
 					</Link>
+					<MenuItem className="w-full">Fundusze Europejskie</MenuItem>
 				</div>
 			)}
 
@@ -338,6 +339,7 @@ const Nav: React.FC = () => {
 					<Link href="/cmentarz">
 						<MenuItem>Cmentarz</MenuItem>
 					</Link>
+					<MenuItem>Fundusze Europejskie</MenuItem>
 				</div>
 			</div>
 		</nav>
